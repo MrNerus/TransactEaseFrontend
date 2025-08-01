@@ -1,0 +1,18 @@
+<nav class="navbar">
+  <div class="navbar-brand">
+    <a routerLink="/dashboard">Transact-Ease</a>
+  </div>
+  <ul class="navbar-nav">
+    <li><a routerLink="/dashboard">Dashboard</a></li>
+    <li><a routerLink="/organizations">Organizations</a></li>
+    <li><a routerLink="/users">Users</a></li>
+    <li><a routerLink="/transactions">Transactions</a></li>
+    <li><a routerLink="/cashback-schemes">Cashback Schemes</a></li>
+    <li><a routerLink="/reports">Reports</a></li>
+    <li><a routerLink="/audit-logs">Audit Logs</a></li>
+  </ul>
+  <div class="navbar-profile">
+    <a routerLink="/profile">Profile</a>
+    <a (click)="logout()">Logout</a>
+  </div>
+</nav>
