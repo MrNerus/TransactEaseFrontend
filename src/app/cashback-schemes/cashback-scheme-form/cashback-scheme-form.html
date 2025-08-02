@@ -1,0 +1,18 @@
+<div class="form-container">
+  <h1>Create Cashback Scheme</h1>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" formControlName="name">
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="isActive">Active</label>
+      <input type="checkbox" id="isActive" formControlName="isActive">
+    </div>
+    <button type="submit" [disabled]="form.invalid">Save</button>
+  </form>
+</div>

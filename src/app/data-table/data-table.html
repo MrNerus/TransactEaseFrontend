@@ -1,0 +1,65 @@
+<div class="data-table-container">
+  <div class="controls">
+    <input type="text" placeholder="Search..." [(ngModel)]="searchTerm" (input)="onSearchChange()">
+    <select [(ngModel)]="searchField" (change)="onSearchFieldChange()">
+      <option value="all">All Fields</option>
+      @for (field of controls.searchableFields; track field) {
+        <option [value]="field">{{ field | titlecase }}</option>
+      }
+    </select>
+    <button (click)="add.emit()" title="Add New"><span class="material-icons">add</span></button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        @for (col of controls.columns; track col.key) {
+          <th>{{ col.label }}</th>
+        }
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of data; track row.id) {
+        <tr>
+          @for (col of controls.columns; track col.key) {
+            <td>
+              @if (col.isDate) {
+                {{ row[col.key] | date:'short' }}
+              } @else if (col.isBoolean) {
+                {{ row[col.key] ? 'Yes' : 'No' }}
+              } @else {
+                {{ row[col.key] || 'N/A' }}
+              }
+            </td>
+          }
+          <td>
+            <button (click)="edit.emit(row)" title="Edit"><span class="material-icons">edit</span></button>
+            <button (click)="delete.emit(row.id)" title="Delete"><span class="material-icons">delete</span></button>
+          </td>
+        </tr>
+      }
+      @empty {
+        <tr>
+          <td [attr.colspan]="controls.columns.length + 1">No data found.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+      @for (option of pageSizeOptions; track option) {
+        <option [value]="option">{{ option }} rows</option>
+      }
+    </select>
+    <button (click)="firstPage()" [disabled]="currentPage() === 1" title="First Page"><span class="material-icons">first_page</span></button>
+    <button (click)="previousPage()" [disabled]="currentPage() === 1" title="Previous Page"><span class="material-icons">chevron_left</span></button>
+    <span>Page
+      <input type="number" [(ngModel)]="pageInput" (change)="goToPage()" min="1" [max]="totalPages()">
+      of {{ totalPages() }}
+    </span>
+    <button (click)="nextPage()" [disabled]="currentPage() === totalPages()" title="Next Page"><span class="material-icons">chevron_right</span></button>
+    <button (click)="lastPage()" [disabled]="currentPage() === totalPages()" title="Last Page"><span class="material-icons">last_page</span></button>
+  </div>
+</div>

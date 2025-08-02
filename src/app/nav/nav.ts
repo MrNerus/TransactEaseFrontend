@@ -23,16 +23,17 @@ export class NavComponent {
     { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
     { label: 'Organizations', icon: 'apartment', route: '/organizations' },
     { label: 'Users', icon: 'people', route: '/users' },
+    { label: 'Staffs', icon: 'badge', route: '/staffs' },
     { label: 'Transactions', icon: 'paid', route: '/transactions' },
     { label: 'Cashback Schemes', icon: 'card_giftcard', route: '/cashback-schemes' },
     { label: 'Reports', icon: 'bar_chart', route: '/reports' },
     { label: 'Audit Logs', icon: 'receipt_long', route: '/audit-logs' },
     { label: 'Documents', icon: 'folder', isDropdown: true, children: [
-      { label: 'View Documents', icon: 'search', route: '/dashboard/documents' },
-      { label: 'Upload Document', icon: 'upload', route: '/dashboard/documents/upload' }
+      { label: 'View Documents', icon: 'search', route: '/documents' },
+      { label: 'Upload Document', icon: 'upload', route: '/documents/upload' }
     ]},
-    { label: 'Accounts', icon: 'account_balance_wallet', route: '/dashboard/accounts' },
-    { label: 'Profile', icon: 'person', route: '/dashboard/profile' }
+    { label: 'Accounts', icon: 'account_balance_wallet', route: '/accounts' },
+    { label: 'Profile', icon: 'person', route: '/profile' }
   ]);
 
   searchTerm = signal('');

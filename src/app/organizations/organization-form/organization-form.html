@@ -1,26 +1,17 @@
-<div class="organization-form-container">
-  <h2>{{ organizationId() ? 'Edit' : 'Add' }} Organization</h2>
-
-  <form (ngSubmit)="onSubmit()">
+<div class="form-container">
+  <h1>{{ isEditMode() ? 'Edit Organization' : 'Add Organization' }}</h1>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-group">
-      <label for="name">Organization Name:</label>
-      <input type="text" id="name" [(ngModel)]="organizationName" name="organizationName" required>
+      <label for="name">Name</label>
+      <input type="text" id="name" formControlName="name">
     </div>
-
     <div class="form-group">
-      <label for="parentId">Parent Organization ID (Optional):</label>
-      <input type="text" id="parentId" [(ngModel)]="parentOrganizationId" name="parentOrganizationId">
+      <label for="parentId">Parent ID</label>
+      <input type="text" id="parentId" formControlName="parentId">
     </div>
-
     <div class="form-actions">
-      <button type="submit">
-        <span class="material-icons">{{ organizationId() ? 'save' : 'add' }}</span>
-        {{ organizationId() ? 'Update' : 'Add' }} Organization
-      </button>
-      <button type="button" (click)="onCancel()">
-        <span class="material-icons">cancel</span>
-        Cancel
-      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">{{ isEditMode() ? 'Save' : 'Add' }}</button>
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
     </div>
   </form>
 </div>

@@ -5,7 +5,6 @@ import { authGuard } from './guards/auth.guard';
 import { DocumentsComponent } from './documents/documents';
 import { ViewDocumentsComponent } from './documents/view/view';
 import { UploadDocumentComponent } from './documents/upload/upload';
-import { DashboardHomeComponent } from './dashboard-home/dashboard-home';
 import { TransactionsComponent } from './transactions/transactions';
 import { AccountsComponent } from './accounts/accounts';
 import { ProfileComponent } from './profile/profile';
@@ -13,6 +12,12 @@ import { OrganizationListComponent } from './organizations/organization-list/org
 import { OrganizationFormComponent } from './organizations/organization-form/organization-form';
 import { UserListComponent } from './users/user-list/user-list';
 import { UserFormComponent } from './users/user-form/user-form';
+import { StaffListComponent } from './staffs/staff-list/staff-list';
+import { StaffFormComponent } from './staffs/staff-form/staff-form';
+import { CashbackSchemesComponent } from './cashback-schemes/cashback-schemes';
+import { CashbackSchemeFormComponent } from './cashback-schemes/cashback-scheme-form/cashback-scheme-form';
+import { ReportsComponent } from './reports/reports';
+import { AuditLogsComponent } from './audit-logs/audit-logs';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,20 +25,6 @@ export const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [authGuard],
-    children: [
-      { path: '', component: DashboardHomeComponent },
-      { path: 'transactions', component: TransactionsComponent },
-      { path: 'accounts', component: AccountsComponent },
-      { path: 'profile', component: ProfileComponent },
-      {
-        path: 'documents',
-        component: DocumentsComponent,
-        children: [
-          { path: '', component: ViewDocumentsComponent },
-          { path: 'upload', component: UploadDocumentComponent },
-        ]
-      },
-    ]
   },
   {
     path: 'organizations',
@@ -65,5 +56,59 @@ export const routes: Routes = [
     component: UserFormComponent,
     canActivate: [authGuard]
   },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
+  {
+    path: 'staffs',
+    component: StaffListComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'staffs/add',
+    component: StaffFormComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'staffs/edit/:id',
+    component: StaffFormComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'transactions',
+    component: TransactionsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'documents',
+    component: DocumentsComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: '', component: ViewDocumentsComponent },
+      { path: 'upload', component: UploadDocumentComponent },
+    ],
+  },
+  {
+    path: 'accounts',
+    component: AccountsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'cashback-schemes',
+    component: CashbackSchemesComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'reports',
+    component: ReportsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'audit-logs',
+    component: AuditLogsComponent,
+    canActivate: [authGuard],
+  },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
 ];

@@ -1,0 +1,80 @@
+.audit-logs-container {
+  padding: 2rem;
+  background-color: var(--background-dark);
+  color: var(--text-light);
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+h1 {
+  color: var(--primary-color);
+  text-shadow: 0 0 10px rgba(0, 194, 255, 0.7);
+}
+
+.filter-container {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="date"] {
+  padding: 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--background-light);
+  color: var(--text-light);
+  font-size: 1rem;
+}
+
+.logs-table-container {
+  background-color: var(--background-light);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: var(--ui-primary-color);
+  color: var(--text-dark);
+}
+
+th,
+td {
+  padding: 0.9rem 1.2rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+tbody tr:hover {
+  background-color: var(--hover-color);
+  color: var(--text-dark);
+  transition: background-color var(--animation-duration) var(--animation-easing);
+}

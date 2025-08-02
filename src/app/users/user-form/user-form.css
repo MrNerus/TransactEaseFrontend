@@ -46,10 +46,10 @@ h2 {
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   border: none;
-  background-color: var(--ui-primary-color);
+  background-color: var(--primary-color);
   color: var(--text-dark);
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color var(--animation-duration) var(--animation-easing);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,26 +1,26 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../user.service';
-import { User } from '../user.interface';
+import { StaffService } from '../staff.service';
+import { Staff } from '../staff.interface';
 import { Router } from '@angular/router';
 import { DataTableComponent, Controls, PageChange, SearchChange } from '../../data-table/data-table';
 
 @Component({
-  selector: 'app-user-list',
-  templateUrl: './user-list.html',
-  styleUrls: ['./user-list.css'],
+  selector: 'app-staff-list',
+  templateUrl: './staff-list.html',
+  styleUrls: ['./staff-list.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, DataTableComponent]
 })
-export class UserListComponent {
-  private userService = inject(UserService);
+export class StaffListComponent {
+  private staffService = inject(StaffService);
   private router = inject(Router);
 
-  users = signal<User[]>([]);
+  staffs = signal<Staff[]>([]);
   totalItems = signal(0);
   pageSize = signal(20);
   searchTerm = signal('');
-  searchField = signal<keyof User | 'all'>('all');
+  searchField = signal<keyof Staff | 'all'>('all');
 
   controls: Controls = {
     columns: [
@@ -36,49 +36,49 @@ export class UserListComponent {
   };
 
   constructor() {
-    this.loadUsers();
+    this.loadStaffs();
   }
 
-  loadUsers(): void {
-    const result = this.userService.getUsers(
+  loadStaffs(): void {
+    const result = this.staffService.getStaffs(
       this.searchTerm(),
       this.searchField(),
       1,
       this.pageSize()
     );
-    this.users.set(result.users);
+    this.staffs.set(result.staffs);
     this.totalItems.set(result.totalItems);
   }
 
   onSearchChange(searchChange: SearchChange): void {
     this.searchTerm.set(searchChange.searchTerm);
-    this.searchField.set(searchChange.searchField as keyof User | 'all');
-    this.loadUsers();
+    this.searchField.set(searchChange.searchField as keyof Staff | 'all');
+    this.loadStaffs();
   }
 
   onPageChange(pageChange: PageChange): void {
-    const result = this.userService.getUsers(
+    const result = this.staffService.getStaffs(
       this.searchTerm(),
       this.searchField(),
       pageChange.page,
       pageChange.pageSize
     );
-    this.users.set(result.users);
+    this.staffs.set(result.staffs);
     this.totalItems.set(result.totalItems);
   }
 
-  addUser(): void {
-    this.router.navigate(['/users/add']);
+  addStaff(): void {
+    this.router.navigate(['/staffs/add']);
   }
 
-  editUser(user: User): void {
-    this.router.navigate(['/users/edit', user.id]);
+  editStaff(staff: Staff): void {
+    this.router.navigate(['/staffs/edit', staff.id]);
   }
 
-  deleteUser(id: string): void {
-    if (confirm(`Are you sure you want to delete user ${id}?`)) {
-      this.userService.deleteUser(id);
-      this.loadUsers();
+  deleteStaff(id: string): void {
+    if (confirm(`Are you sure you want to delete staff ${id}?`)) {
+      this.staffService.deleteStaff(id);
+      this.loadStaffs();
     }
   }
 }

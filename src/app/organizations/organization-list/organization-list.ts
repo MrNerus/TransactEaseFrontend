@@ -1,31 +1,36 @@
-import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { OrganizationService } from '../organization.service';
 import { Organization } from '../organization.interface';
 import { Router } from '@angular/router';
+import { DataTableComponent, Controls, PageChange, SearchChange } from '../../data-table/data-table';
 
 @Component({
   selector: 'app-organization-list',
   templateUrl: './organization-list.html',
   styleUrls: ['./organization-list.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, DatePipe]
+  imports: [CommonModule, DataTableComponent]
 })
 export class OrganizationListComponent {
   private organizationService = inject(OrganizationService);
   private router = inject(Router);
 
   organizations = signal<Organization[]>([]);
+  totalItems = signal(0);
+  pageSize = signal(20);
   searchTerm = signal('');
   searchField = signal<keyof Organization | 'all'>('all');
-  currentPage = signal(1);
-  pageSize = signal(20); // Default page size set to 20
-  pageSizeOptions = [5, 10, 20, 50];
-  totalItems = signal(0);
-  pageInput = signal(1);
 
-  totalPages = computed(() => Math.ceil(this.totalItems() / this.pageSize()));
+  controls: Controls = {
+    columns: [
+      { key: 'id', label: 'ID' },
+      { key: 'name', label: 'Name' },
+      { key: 'parentId', label: 'Parent ID' },
+      { key: 'createdAt', label: 'Created At', isDate: true },
+    ],
+    searchableFields: ['id', 'name', 'parentId']
+  };
 
   constructor() {
     this.loadOrganizations();
@@ -35,65 +40,28 @@ export class OrganizationListComponent {
     const result = this.organizationService.getOrganizations(
       this.searchTerm(),
       this.searchField(),
-      this.currentPage(),
+      1,
       this.pageSize()
     );
     this.organizations.set(result.organizations);
     this.totalItems.set(result.totalItems);
-    this.pageInput.set(this.currentPage());
   }
 
-  onSearchChange(): void {
-    this.currentPage.set(1);
+  onSearchChange(searchChange: SearchChange): void {
+    this.searchTerm.set(searchChange.searchTerm);
+    this.searchField.set(searchChange.searchField as keyof Organization | 'all');
     this.loadOrganizations();
   }
 
-  onSearchFieldChange(): void {
-    this.currentPage.set(1);
-    this.loadOrganizations();
-  }
-
-  onPageSizeChange(): void {
-    this.currentPage.set(1);
-    this.loadOrganizations();
-  }
-
-  goToPage(): void {
-    const page = this.pageInput();
-    if (page >= 1 && page <= this.totalPages()) {
-      this.currentPage.set(page);
-      this.loadOrganizations();
-    } else {
-      this.pageInput.set(this.currentPage());
-    }
-  }
-
-  firstPage(): void {
-    if (this.currentPage() !== 1) {
-      this.currentPage.set(1);
-      this.loadOrganizations();
-    }
-  }
-
-  previousPage(): void {
-    if (this.currentPage() > 1) {
-      this.currentPage.update(page => page - 1);
-      this.loadOrganizations();
-    }
-  }
-
-  nextPage(): void {
-    if (this.currentPage() < this.totalPages()) {
-      this.currentPage.update(page => page + 1);
-      this.loadOrganizations();
-    }
-  }
-
-  lastPage(): void {
-    if (this.currentPage() !== this.totalPages()) {
-      this.currentPage.set(this.totalPages());
-      this.loadOrganizations();
-    }
+  onPageChange(pageChange: PageChange): void {
+    const result = this.organizationService.getOrganizations(
+      this.searchTerm(),
+      this.searchField(),
+      pageChange.page,
+      pageChange.pageSize
+    );
+    this.organizations.set(result.organizations);
+    this.totalItems.set(result.totalItems);
   }
 
   addOrganization(): void {

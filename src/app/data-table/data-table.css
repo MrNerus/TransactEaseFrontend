@@ -1,13 +1,7 @@
-.organization-list-container {
+.data-table-container {
   padding: 2rem;
   background-color: var(--background-dark);
   color: var(--text-light);
-}
-
-h2 {
-  color: var(--primary-color);
-  margin-bottom: 1.5rem;
-  text-shadow: 0 0 10px rgba(0, 194, 255, 0.7);
 }
 
 .controls {
@@ -40,7 +34,7 @@ h2 {
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   border: none;
-  background-color: var(--ui-primary-color);
+  background-color: var(--primary-color);
   color: var(--text-dark);
   cursor: pointer;
   transition: background-color var(--animation-duration) var(--animation-easing);
@@ -89,17 +83,17 @@ tbody tr:hover {
 }
 
 td button {
-  padding: 0.4rem 0.6rem; /* Smaller padding for inline buttons */
+  padding: 0.4rem 0.6rem;
   border-radius: 5px;
   border: none;
-  background-color: var(--secondary-color); /* Use secondary color for inline buttons */
+  background-color: var(--secondary-color);
   color: var(--text-dark);
   cursor: pointer;
   transition: background-color var(--animation-duration) var(--animation-easing);
-  display: inline-flex; /* Use inline-flex for icons */
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-right: 0.5rem; /* Space between buttons */
+  margin-right: 0.5rem;
 }
 
 td button:hover {
@@ -107,7 +101,7 @@ td button:hover {
 }
 
 td button .material-icons {
-  font-size: 1rem; /* Smaller icon size for inline buttons */
+  font-size: 1rem;
   color: var(--text-dark);
 }
 
@@ -122,7 +116,7 @@ td button .material-icons {
   padding: 0.5rem 1rem;
   border-radius: 8px;
   border: none;
-  background-color: var(--ui-primary-color);
+  background-color: var(--primary-color);
   color: var(--text-dark);
   cursor: pointer;
   transition: background-color var(--animation-duration) var(--animation-easing);

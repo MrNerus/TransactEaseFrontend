@@ -1,4 +1,4 @@
-.organization-list-container {
+.staff-list-container {
   padding: 2rem;
   background-color: var(--background-dark);
   color: var(--text-light);
@@ -89,17 +89,17 @@ tbody tr:hover {
 }
 
 td button {
-  padding: 0.4rem 0.6rem; /* Smaller padding for inline buttons */
+  padding: 0.4rem 0.6rem;
   border-radius: 5px;
   border: none;
-  background-color: var(--secondary-color); /* Use secondary color for inline buttons */
+  background-color: var(--secondary-color);
   color: var(--text-dark);
   cursor: pointer;
   transition: background-color var(--animation-duration) var(--animation-easing);
-  display: inline-flex; /* Use inline-flex for icons */
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-right: 0.5rem; /* Space between buttons */
+  margin-right: 0.5rem;
 }
 
 td button:hover {
@@ -107,7 +107,7 @@ td button:hover {
 }
 
 td button .material-icons {
-  font-size: 1rem; /* Smaller icon size for inline buttons */
+  font-size: 1rem;
   color: var(--text-dark);
 }
 

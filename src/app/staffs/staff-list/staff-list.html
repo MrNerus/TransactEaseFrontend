@@ -1,11 +1,11 @@
 <app-data-table
-  [data]="organizations()"
+  [data]="staffs()"
   [controls]="controls"
   [totalItems]="totalItems()"
   [pageSize]="pageSize()"
   (searchChange)="onSearchChange($event)"
   (pageChange)="onPageChange($event)"
-  (add)="addOrganization()"
-  (edit)="editOrganization($event)"
-  (delete)="deleteOrganization($event)"
+  (add)="addStaff()"
+  (edit)="editStaff($event)"
+  (delete)="deleteStaff($event)"
 ></app-data-table>

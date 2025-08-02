@@ -1,4 +1,4 @@
-.organization-form-container {
+.staff-form-container {
   padding: 2rem;
   background-color: var(--background-dark);
   color: var(--text-light);
@@ -20,13 +20,20 @@ h2 {
   color: var(--text-light);
 }
 
-.form-group input {
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group select {
   width: 100%;
   padding: 0.75rem;
   border-radius: 8px;
   border: 1px solid var(--border-color);
   background-color: var(--background-light);
   color: var(--text-light);
+}
+
+.form-group input[type="checkbox"] {
+  width: auto;
+  margin-top: 0.5rem;
 }
 
 .form-actions {
@@ -43,14 +50,14 @@ h2 {
   color: var(--text-dark);
   cursor: pointer;
   transition: background-color var(--animation-duration) var(--animation-easing);
-  display: flex; /* Enable flexbox for icon and text alignment */
+  display: flex;
   align-items: center;
-  justify-content: center; /* Center content */
+  justify-content: center;
 }
 
 .form-actions button .material-icons {
   font-size: 1.2rem;
-  margin-right: 0.5rem; /* Space between icon and text */
+  margin-right: 0.5rem;
   color: var(--text-dark);
 }
 

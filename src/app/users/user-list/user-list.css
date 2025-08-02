@@ -43,7 +43,7 @@ h2 {
   background-color: var(--ui-primary-color);
   color: var(--text-dark);
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color var(--animation-duration) var(--animation-easing);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -95,7 +95,7 @@ td button {
   background-color: var(--secondary-color);
   color: var(--text-dark);
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color var(--animation-duration) var(--animation-easing);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -125,7 +125,7 @@ td button .material-icons {
   background-color: var(--ui-primary-color);
   color: var(--text-dark);
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color var(--animation-duration) var(--animation-easing);
   display: flex;
   align-items: center;
   justify-content: center;

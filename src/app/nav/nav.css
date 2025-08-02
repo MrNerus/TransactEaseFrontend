@@ -128,7 +128,7 @@
 .dropdown-indicator {
   margin-left: auto;
   transition: transform var(--animation-duration) var(--animation-easing);
-  color: var(--accent-color);
+  color: var(--hover-color);
 }
 
 .nested-menu[open] .dropdown-indicator {

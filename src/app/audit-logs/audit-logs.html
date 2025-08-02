@@ -1,0 +1,47 @@
+<div class="audit-logs-container">
+  <div class="header">
+    <h1>Audit Logs</h1>
+  </div>
+
+  <div class="filter-container">
+    <div class="form-group">
+      <label for="user">User</label>
+      <input type="text" id="user" placeholder="Filter by user">
+    </div>
+    <div class="form-group">
+      <label for="action">Action</label>
+      <input type="text" id="action" placeholder="Filter by action">
+    </div>
+    <div class="form-group">
+      <label for="startDate">Start Date</label>
+      <input type="date" id="startDate">
+    </div>
+    <div class="form-group">
+      <label for="endDate">End Date</label>
+      <input type="date" id="endDate">
+    </div>
+  </div>
+
+  <div class="logs-table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>User</th>
+          <th>Action</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of auditLogs(); track log.id) {
+          <tr>
+            <td>{{ log.timestamp | date:'medium' }}</td>
+            <td>{{ log.user }}</td>
+            <td>{{ log.action }}</td>
+            <td>{{ log.details }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

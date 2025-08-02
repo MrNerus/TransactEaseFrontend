@@ -1,58 +1,53 @@
-import { ChangeDetectionStrategy, Component, inject, input, output, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationService } from '../organization.service';
-import { Organization } from '../organization.interface';
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-organization-form',
   templateUrl: './organization-form.html',
   styleUrls: ['./organization-form.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule]
+  imports: [ReactiveFormsModule, CommonModule]
 })
-export class OrganizationFormComponent implements OnInit {
-  organizationId = input<string | undefined>(undefined);
-  formSubmitted = output<void>();
-
-  private organizationService = inject(OrganizationService);
+export class OrganizationFormComponent {
+  private fb = inject(FormBuilder);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private organizationService = inject(OrganizationService);
 
-  organizationName: string = '';
-  parentOrganizationId: string | undefined = undefined;
+  form = this.fb.group({
+    id: [null as string | null],
+    name: ['', Validators.required],
+    parentId: [null as string | null]
+  });
 
-  ngOnInit(): void {
-    if (this.organizationId()) {
-      const org = this.organizationService.getOrganizationById(this.organizationId()!);
-      if (org) {
-        this.organizationName = org.name;
-        this.parentOrganizationId = org.parentId;
+  isEditMode = signal(false);
+
+  constructor() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.isEditMode.set(true);
+      const organization = this.organizationService.getOrganizationById(id);
+      if (organization) {
+        this.form.patchValue(organization);
       }
     }
   }
 
-  onSubmit(): void {
-    if (this.organizationId()) {
-      // Edit existing organization
-      const updatedOrg: Organization = {
-        id: this.organizationId()!,
-        name: this.organizationName,
-        parentId: this.parentOrganizationId,
-        createdAt: this.organizationService.getOrganizationById(this.organizationId()!)?.createdAt || new Date().toISOString(),
-      };
-      this.organizationService.updateOrganization(updatedOrg);
-    } else {
-      // Add new organization
-      this.organizationService.addOrganization({
-        name: this.organizationName,
-        parentId: this.parentOrganizationId,
-      });
+  onSubmit() {
+    if (this.form.valid) {
+      if (this.isEditMode()) {
+        this.organizationService.updateOrganization(this.form.value as any);
+      } else {
+        this.organizationService.addOrganization(this.form.value as any);
+      }
+      this.router.navigate(['/organizations']);
     }
-    this.router.navigate(['/organizations']);
   }
-
-  onCancel(): void {
+  onCancel() {
+    this.form.reset();
     this.router.navigate(['/organizations']);
-  }
+  }  
 }

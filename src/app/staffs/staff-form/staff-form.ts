@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserService } from '../user.service';
+import { StaffService } from '../staff.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-user-form',
-  templateUrl: './user-form.html',
-  styleUrls: ['./user-form.css'],
+  selector: 'app-staff-form',
+  templateUrl: './staff-form.html',
+  styleUrls: ['./staff-form.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, CommonModule]
 })
-export class UserFormComponent {
+export class StaffFormComponent {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private userService = inject(UserService);
+  private staffService = inject(StaffService);
 
   form = this.fb.group({
     id: [null as string | null],
@@ -32,9 +32,9 @@ export class UserFormComponent {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode.set(true);
-      const user = this.userService.getUserById(id);
-      if (user) {
-        this.form.patchValue(user);
+      const staff = this.staffService.getStaffById(id);
+      if (staff) {
+        this.form.patchValue(staff);
       }
     }
   }
@@ -42,15 +42,15 @@ export class UserFormComponent {
   onSubmit() {
     if (this.form.valid) {
       if (this.isEditMode()) {
-        this.userService.updateUser(this.form.value as any);
+        this.staffService.updateStaff(this.form.value as any);
       } else {
-        this.userService.addUser(this.form.value as any);
+        this.staffService.addStaff(this.form.value as any);
       }
-      this.router.navigate(['/users']);
+      this.router.navigate(['/staffs']);
     }
   }
   onCancel() {
     this.form.reset();
-    this.router.navigate(['/users']);
+    this.router.navigate(['/staffs']);
   }    
 }
