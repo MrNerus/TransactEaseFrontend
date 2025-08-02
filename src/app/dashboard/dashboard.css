@@ -1,50 +1,89 @@
 .dashboard-container {
   padding: 2rem;
+  background-color: var(--background-dark);
+  color: var(--text-light);
+}
+
+h2 {
+  color: var(--primary-color); /* Keep primary for main headings */
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 10px rgba(0, 194, 255, 0.7); /* Stronger glow for main headings */
 }
 
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+  gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
 .metric-card {
-  background-color: #ecf0f1;
+  background-color: var(--background-light);
   padding: 1.5rem;
-  border-radius: 8px;
+  border-radius: 12px;
   text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  transition: transform var(--animation-duration) var(--animation-easing);
+}
+
+.metric-card:hover {
+  transform: translateY(-5px) scale(1.01);
 }
 
 .metric-card h2 {
   margin-top: 0;
-  font-size: 1.2rem;
-  color: #2c3e50;
+  font-size: 1.3rem;
+  color: var(--ui-primary-color); /* Use ui-primary for metric card headings */
+  text-shadow: none; /* Remove glow from these headings */
 }
 
 .metric-card p {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: bold;
-  color: #3498db;
+  color: var(--accent-color);
   margin: 0;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
 }
 
 .recent-transactions h2 {
   margin-bottom: 1rem;
+  color: var(--primary-color); /* Keep primary for section headings */
+  text-shadow: 0 0 10px rgba(0, 194, 255, 0.7);
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  background-color: var(--background-light);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 thead {
-  background-color: #3498db;
-  color: white;
+  background-color: var(--ui-primary-color); /* Use ui-primary for table header */
+  color: var(--text-dark);
 }
 
-th, td {
-  padding: 0.75rem;
+th,
+td {
+  padding: 0.9rem 1.2rem;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border-color);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.1); /* Subtle stripe effect */
+}
+
+tbody tr:hover {
+  background-color: var(--hover-color);
+  color: var(--text-dark);
+  transition: background-color var(--animation-duration) var(--animation-easing);
 }

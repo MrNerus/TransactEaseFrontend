@@ -1,38 +1,203 @@
+:root {
+  /* Animation Variables */
+  --animation-duration: 0.15s;
+  --animation-easing: cubic-bezier(0.25, 0.8, 0.25, 1); /* Fast, fluid ease-out */
+  --hover-scale: 1.01; /* Slightly reduced scale */
+  --hover-translate-x: 3px; /* Reduced translate to prevent overflow */
+}
+
 .navbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #2c3e50;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: var(--background-dark);
   padding: 1rem;
-  color: white;
+  color: var(--text-light);
+  width: 220px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
+  overflow-y: auto; /* Allow vertical scrolling for the entire navbar if content exceeds height */
+  overflow-x: hidden; /* Ensure no horizontal scrollbar on the main navbar */
+}
+
+/* Scrollbar Styling for Webkit (Chrome, Safari) */
+.navbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.navbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.navbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 194, 255, 0.3);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.navbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--primary-color);
+}
+
+/* Scrollbar Styling for Firefox */
+.navbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 194, 255, 0.3) transparent;
+}
+
+.navbar-brand {
+  margin-bottom: 1.5rem;
+  width: 100%;
+  text-align: center;
 }
 
 .navbar-brand a {
-  color: white;
+  color: var(--primary-color); /* Keep primary for brand for impact */
   text-decoration: none;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: bold;
+  text-shadow: 0 0 10px var(--primary-color);
+}
+
+.navbar-menu-scrollable {
+  flex-grow: 1;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 5px;
 }
 
 .navbar-nav {
   display: flex;
+  flex-direction: column;
   list-style: none;
   margin: 0;
   padding: 0;
+  width: 100%;
 }
 
 .navbar-nav li {
-  margin: 0 1rem;
+  margin: 0.3rem 0;
+  width: 100%;
 }
 
-.navbar-nav a {
-  color: white;
+.navbar-nav a,
+.navbar-nav summary {
+  color: var(--text-light);
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color var(--animation-duration) var(--animation-easing),
+              transform var(--animation-duration) var(--animation-easing);
+}
+
+.navbar-nav a:hover,
+.navbar-nav summary:hover {
+  background-color: var(--ui-primary-color); /* Use ui-primary for hover background */
+  transform: translateX(var(--hover-translate-x)) scale(var(--hover-scale));
+  box-shadow: 0 0 8px rgba(0, 194, 255, 0.3); /* Subtle glow with primary color */
+}
+
+.navbar-nav .material-icons {
+  margin-right: 0.7rem;
+  font-size: 1.1rem;
+  color: var(--primary-color); /* Keep primary for icons for visual pop */
+}
+
+/* Nested Menu Styles */
+.nested-menu {
+  width: 100%;
+}
+
+.nested-menu summary {
+  list-style: none;
+  position: relative;
+}
+
+.nested-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.dropdown-indicator {
+  margin-left: auto;
+  transition: transform var(--animation-duration) var(--animation-easing);
+  color: var(--accent-color);
+}
+
+.nested-menu[open] .dropdown-indicator {
+  transform: rotate(180deg);
+}
+
+.nested-menu-items {
+  list-style: none;
+  padding-left: 1.5rem;
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height var(--animation-duration) var(--animation-easing);
+}
+
+.nested-menu[open] .nested-menu-items {
+  max-height: 500px;
+}
+
+.nested-menu-items li a {
+  padding: 0.4rem 1rem;
+  font-size: 0.95rem;
+}
+
+/* Search Bar Styles */
+.navbar-search {
+  width: 100%;
+  padding: 1rem 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  margin-top: 1rem;
+}
+
+.navbar-search input {
+  width: calc(100% - 2rem);
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--background-light);
+  color: var(--text-light);
+  font-size: 1rem;
+}
+
+.navbar-search input::placeholder {
+  color: var(--placeholder-color);
+}
+
+/* Profile/Logout Styles */
+.navbar-profile {
+  margin-top: auto;
+  width: 100%;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
 }
 
 .navbar-profile a {
-  color: white;
+  color: var(--text-light);
   text-decoration: none;
-  margin-left: 1rem;
+  display: block;
+  padding: 0.6rem 1rem;
   cursor: pointer;
+  border-radius: 4px;
+  transition: background-color var(--animation-duration) var(--animation-easing),
+              transform var(--animation-duration) var(--animation-easing);
+}
+
+.navbar-profile a:hover {
+  background-color: var(--ui-primary-color); /* Use ui-primary for hover background */
+  transform: translateX(var(--hover-translate-x)) scale(var(--hover-scale));
+  box-shadow: 0 0 8px rgba(0, 194, 255, 0.3); /* Subtle glow with primary color */
 }

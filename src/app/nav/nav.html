@@ -2,15 +2,41 @@
   <div class="navbar-brand">
     <a routerLink="/dashboard">Transact-Ease</a>
   </div>
-  <ul class="navbar-nav">
-    <li><a routerLink="/dashboard">Dashboard</a></li>
-    <li><a routerLink="/organizations">Organizations</a></li>
-    <li><a routerLink="/users">Users</a></li>
-    <li><a routerLink="/transactions">Transactions</a></li>
-    <li><a routerLink="/cashback-schemes">Cashback Schemes</a></li>
-    <li><a routerLink="/reports">Reports</a></li>
-    <li><a routerLink="/audit-logs">Audit Logs</a></li>
-  </ul>
+
+  <div class="navbar-menu-scrollable">
+    <ul class="navbar-nav">
+      @for (item of filteredMenuItems(); track item.label) {
+        <li>
+          @if (item.route) {
+            <a [routerLink]="item.route">
+              @if (item.icon) {<span class="material-icons">{{ item.icon }}</span>} {{ item.label }}
+            </a>
+          } @else if (item.children) {
+            <details class="nested-menu">
+              <summary>
+                @if (item.icon) {<span class="material-icons">{{ item.icon }}</span>} {{ item.label }}
+                @if (item.isDropdown) {<span class="material-icons dropdown-indicator">arrow_drop_down</span>}
+              </summary>
+              <ul class="nested-menu-items">
+                @for (child of item.children; track child.label) {
+                  <li>
+                    <a [routerLink]="child.route">
+                      @if (child.icon) {<span class="material-icons">{{ child.icon }}</span>} {{ child.label }}
+                    </a>
+                  </li>
+                }
+              </ul>
+            </details>
+          }
+        </li>
+      }
+    </ul>
+  </div>
+
+  <div class="navbar-search">
+    <input type="text" placeholder="Search menu..." (input)="onSearchChange($event)">
+  </div>
+
   <div class="navbar-profile">
     <a routerLink="/profile">Profile</a>
     <a (click)="logout()">Logout</a>
