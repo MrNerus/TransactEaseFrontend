@@ -14,10 +14,14 @@ import { UserListComponent } from './users/user-list/user-list';
 import { UserFormComponent } from './users/user-form/user-form';
 import { StaffListComponent } from './staffs/staff-list/staff-list';
 import { StaffFormComponent } from './staffs/staff-form/staff-form';
-import { CashbackSchemesComponent } from './cashback-schemes/cashback-schemes';
+import { CashbackSchemeListComponent } from './cashback-schemes/cashback-scheme-list';
 import { CashbackSchemeFormComponent } from './cashback-schemes/cashback-scheme-form/cashback-scheme-form';
 import { ReportsComponent } from './reports/reports';
 import { AuditLogsComponent } from './audit-logs/audit-logs';
+import { CardListComponent } from './cards/card-list/card-list';
+import { CardAddComponent } from './cards/card-add/card-add';
+import { CardTransferComponent } from './cards/card-transfer/card-transfer';
+import { CardAssignComponent } from './cards/card-assign/card-assign';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -97,7 +101,17 @@ export const routes: Routes = [
   },
   {
     path: 'cashback-schemes',
-    component: CashbackSchemesComponent,
+    component: CashbackSchemeListComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'cashback-schemes/add',
+    component: CashbackSchemeFormComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'cashback-schemes/edit/:id',
+    component: CashbackSchemeFormComponent,
     canActivate: [authGuard],
   },
   {
@@ -108,6 +122,31 @@ export const routes: Routes = [
   {
     path: 'audit-logs',
     component: AuditLogsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'cards',
+    component: CardListComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'cards/add',
+    component: CardAddComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'cards/transfer',
+    component: CardTransferComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'cards/assign',
+    component: CardAssignComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'cards/assign/:id',
+    component: CardAssignComponent,
     canActivate: [authGuard],
   },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },

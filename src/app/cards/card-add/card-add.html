@@ -1,0 +1,36 @@
+<div class="form-container">
+  <h1>Add Cards</h1>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div formArrayName="cards">
+      @for (card of cards.controls; track $index) {
+        <div [formGroupName]="$index" class="card-form-group">
+          <div class="form-group">
+            <label for="cardNumber-{{$index}}">Card Number</label>
+            <input id="cardNumber-{{$index}}" type="text" formControlName="cardNumber">
+          </div>
+          <div class="form-group">
+            <label for="cardType-{{$index}}">Card Type</label>
+            <select id="cardType-{{$index}}" formControlName="cardType">
+              <option value="debit">Debit</option>
+              <option value="credit">Credit</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="issueDate-{{$index}}">Issue Date</label>
+            <input id="issueDate-{{$index}}" type="date" formControlName="issueDate">
+          </div>
+          <div class="form-group">
+            <label for="expiryDate-{{$index}}">Expiry Date</label>
+            <input id="expiryDate-{{$index}}" type="date" formControlName="expiryDate">
+          </div>
+          <button type="button" class="btn btn-danger" (click)="removeCard($index)">Remove</button>
+        </div>
+      }
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="addCard()">Add Another Card</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Submit</button>
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+    </div>
+  </form>
+</div>

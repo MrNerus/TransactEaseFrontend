@@ -1,0 +1,11 @@
+<app-data-table
+  [data]="cashbackSchemes()"
+  [controls]="{ columns: columns, searchableFields: ['name', 'description'] }"
+  [totalItems]="totalItems()"
+  [pageSize]="pageSize()"
+  (searchChange)="onSearchChange($event)"
+  (pageChange)="onPageChange($event)"
+  (add)="addCashbackScheme()"
+  (edit)="editCashbackScheme($event)"
+  (delete)="deleteCashbackScheme($event)"
+></app-data-table>

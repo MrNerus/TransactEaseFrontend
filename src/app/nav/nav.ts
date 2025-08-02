@@ -26,6 +26,7 @@ export class NavComponent {
     { label: 'Staffs', icon: 'badge', route: '/staffs' },
     { label: 'Transactions', icon: 'paid', route: '/transactions' },
     { label: 'Cashback Schemes', icon: 'card_giftcard', route: '/cashback-schemes' },
+    { label: 'Cards', icon: 'credit_card', route: '/cards' },
     { label: 'Reports', icon: 'bar_chart', route: '/reports' },
     { label: 'Audit Logs', icon: 'receipt_long', route: '/audit-logs' },
     { label: 'Documents', icon: 'folder', isDropdown: true, children: [

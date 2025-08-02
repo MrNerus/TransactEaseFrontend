@@ -1,0 +1,17 @@
+.form-container {
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+select[multiple] {
+  min-height: 150px;
+}

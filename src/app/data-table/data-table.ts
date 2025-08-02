@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, signal, computed } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -29,27 +29,28 @@ export interface SearchChange {
   templateUrl: './data-table.html',
   styleUrls: ['./data-table.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [CommonModule, FormsModule, DatePipe]
 })
 export class DataTableComponent {
-  @Input() data: any[] = [];
-  @Input() controls: Controls = { columns: [], searchableFields: [] };
-  @Input() totalItems = 0;
-  @Input() pageSize = 20;
-  @Input() pageSizeOptions = [5, 10, 20, 50];
+  data = input<any[]>([]);
+  controls = input<Controls>({ columns: [], searchableFields: [] });
+  totalItems = input(0);
+  pageSize = input(20);
+  pageSizeOptions = input([5, 10, 20, 50]);
 
-  @Output() searchChange = new EventEmitter<SearchChange>();
-  @Output() pageChange = new EventEmitter<PageChange>();
-  @Output() add = new EventEmitter<void>();
-  @Output() edit = new EventEmitter<any>();
-  @Output() delete = new EventEmitter<any>();
+  searchChange = output<SearchChange>();
+  pageChange = output<PageChange>();
+  add = output<void>();
+  edit = output<any>();
+  delete = output<any>();
 
   currentPage = signal(1);
   pageInput = signal(1);
   searchTerm = signal('');
   searchField = signal('all');
 
-  totalPages = computed(() => Math.ceil(this.totalItems / this.pageSize));
+  totalPages = computed(() => Math.ceil(this.totalItems() / this.pageSize()));
 
   onSearchChange(): void {
     this.currentPage.set(1);
@@ -109,6 +110,6 @@ export class DataTableComponent {
   }
 
   private emitPageChange(): void {
-    this.pageChange.emit({ page: this.currentPage(), pageSize: this.pageSize });
+    this.pageChange.emit({ page: this.currentPage(), pageSize: this.pageSize() });
   }
 }

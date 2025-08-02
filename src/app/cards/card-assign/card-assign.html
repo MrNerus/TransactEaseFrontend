@@ -1,0 +1,27 @@
+<div class="form-container">
+  <h1>Assign Card</h1>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="cardId">Select Card</label>
+      <select id="cardId" formControlName="cardId">
+        @for (card of cards(); track card.id) {
+          <option [value]="card.id">{{ card.cardNumber }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="userId">Select User</label>
+      <select id="userId" formControlName="userId">
+        @for (user of users(); track user.id) {
+          <option [value]="user.id">{{ user.fullName }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Assign</button>
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+    </div>
+  </form>
+</div>

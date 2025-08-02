@@ -1,0 +1,13 @@
+<app-data-table
+  [data]="cards()"
+  [controls]="{ columns: columns, searchableFields: [] }"
+  [totalItems]="totalItems()"
+  [pageSize]="pageSize()"
+  (pageChange)="onPageChange($event)"
+  (add)="addCard()"
+  (edit)="assignCard($event)"
+>
+  <ng-container>
+    <button (click)="transferCards()">Transfer Cards</button>
+  </ng-container>
+</app-data-table>

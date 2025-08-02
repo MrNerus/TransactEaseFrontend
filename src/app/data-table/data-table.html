@@ -3,7 +3,7 @@
     <input type="text" placeholder="Search..." [(ngModel)]="searchTerm" (input)="onSearchChange()">
     <select [(ngModel)]="searchField" (change)="onSearchFieldChange()">
       <option value="all">All Fields</option>
-      @for (field of controls.searchableFields; track field) {
+      @for (field of controls().searchableFields; track field) {
         <option [value]="field">{{ field | titlecase }}</option>
       }
     </select>
@@ -13,16 +13,16 @@
   <table>
     <thead>
       <tr>
-        @for (col of controls.columns; track col.key) {
+        @for (col of controls().columns; track col.key) {
           <th>{{ col.label }}</th>
         }
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      @for (row of data; track row.id) {
+      @for (row of data(); track row.id) {
         <tr>
-          @for (col of controls.columns; track col.key) {
+          @for (col of controls().columns; track col.key) {
             <td>
               @if (col.isDate) {
                 {{ row[col.key] | date:'short' }}
@@ -41,7 +41,7 @@
       }
       @empty {
         <tr>
-          <td [attr.colspan]="controls.columns.length + 1">No data found.</td>
+          <td [attr.colspan]="controls().columns.length + 1">No data found.</td>
         </tr>
       }
     </tbody>
@@ -49,7 +49,7 @@
 
   <div class="pagination">
     <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
-      @for (option of pageSizeOptions; track option) {
+      @for (option of pageSizeOptions(); track option) {
         <option [value]="option">{{ option }} rows</option>
       }
     </select>

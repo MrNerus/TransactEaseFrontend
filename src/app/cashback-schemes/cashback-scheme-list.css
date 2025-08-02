@@ -1,0 +1,5 @@
+.cashback-scheme-list-container {
+  padding: 2rem;
+  background-color: var(--background-dark);
+  color: var(--text-light);
+}

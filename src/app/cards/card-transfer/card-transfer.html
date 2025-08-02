@@ -1,0 +1,31 @@
+<div class="form-container">
+  <h1>Transfer Cards</h1>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="cardIds">Select Cards</label>
+      <select id="cardIds" formControlName="cardIds" multiple>
+        @for (card of cards(); track card.id) {
+          <option [value]="card.id">{{ card.cardNumber }}</option>
+        }
+      </select>
+    </div>
+
+    @if (isAdmin()) {
+      <div class="form-group">
+        <label for="organizationId">Select Organization</label>
+        <select id="organizationId" formControlName="organizationId">
+          @for (org of organizations(); track org.id) {
+            <option [value]="org.id">{{ org.name }}</option>
+          }
+        </select>
+      </div>
+    } @else {
+      <input type="hidden" formControlName="organizationId" [value]="authService.getUser()?.organizationId">
+    }
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Transfer</button>
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+    </div>
+  </form>
+</div>

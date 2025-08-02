@@ -1,39 +1,44 @@
-# Transact-Ease Blueprint
+# TransactEase Blueprint
 
 ## Overview
 
-This document outlines the style, design, and features of the Transact-Ease application. It serves as a single source of truth for the application's blueprint, from its initial version to the current state.
+TransactEase is a modern, interactive financial management application built with Angular. It provides a comprehensive suite of tools for managing transactions, accounts, users, and cashback schemes. The application is designed with a clean, intuitive user interface and a focus on performance and accessibility.
 
-## Current State
+## Style and Design
 
-### Style and Design
+- **Framework**: Angular 20+
+- **Styling**: Native CSS with a modern, responsive design
+- **Components**: Standalone components with `ChangeDetectionStrategy.OnPush`
+- **State Management**: Signals for reactive state management
+- **Control Flow**: Native `@` syntax for all template logic
 
-*   **UI Framework:** Angular
-*   **Styling:** Modern CSS with a clean and professional look.
-*   **Color Palette:**
-    *   Primary: #3498db (Blue)
-    *   Secondary: #2ecc71 (Green)
-    *   Accent: #f1c40f (Yellow)
-    *   Neutral: #ecf0f1 (Light Gray)
-    *   Text: #2c3e50 (Dark Gray)
-*   **Typography:**
-    *   Font: Roboto, sans-serif
-    *   Headings: Bold, with a clear hierarchy
-    *   Body: Regular weight, legible size
+## Features
 
-### Implemented Features
+- **Authentication**: Secure login with JWT-based authentication.
+- **Dashboard**: A central hub for accessing all application features.
+- **Organizations**: Manage organizations with CRUD functionality.
+- **Users**: Manage users with CRUD functionality.
+- **Staff**: Manage staff members with CRUD functionality.
+- **Transactions**: View and manage financial transactions.
+- **Documents**: Upload and view documents.
+- **Accounts**: Manage financial accounts.
+- **Profile**: View and edit user profiles.
+- **Cashback Schemes**: Create, edit, and delete cashback schemes.
+- **Reports**: Generate and view financial reports.
+- **Audit Logs**: Track user activity and system events.
 
-*   Initial project setup with Angular.
-*   A fully functional navigation bar with routing for all main sections.
-*   A dynamic dashboard displaying key metrics and a list of recent transactions.
-*   A complete UI for the Cashback Schemes page, including a form for creating and editing schemes.
-*   A UI for the Reports page with filtering options.
-*   A UI for the Audit Logs page with filtering and a table to display logs.
-*   A streamlined, top-level routing structure for the application.
-*   A reusable `data-table` component with a `controls` property for dynamic column and search field configuration.
-*   Edit functionality for the Organizations and Users pages, with pre-filled forms and a "Save" button.
-*   Consistent styling for buttons and dropdowns across the application.
+## Current Task: Add Card Module
 
-## Development Plan
-
-All initial development tasks are complete. The application now has a solid foundation with a consistent design and user interface across all main sections. The next steps will involve adding more advanced functionality and connecting the front-end to a back-end service.
+- **Objective**: Implement a new module for card management with features for adding, transferring, and assigning cards.
+- **Steps**:
+  1. **Phase 1: Core Structure and Card Addition**
+     - Created the `Card` interface and `CardService`.
+     - Implemented a form to add multiple cards at once.
+     - Added the new routes to the application.
+  2. **Phase 2: Card Transfer**
+     - Implemented a form to transfer multiple cards to different organizational levels.
+     - Added logic to differentiate between admin and branch office users.
+  3. **Phase 3: Card Assignment and Management**
+     - Created a form for staff to assign cards to users.
+     - Implemented features for revoking cards and managing their expiry dates.
+     - Added a data table to view and manage card assignments.
