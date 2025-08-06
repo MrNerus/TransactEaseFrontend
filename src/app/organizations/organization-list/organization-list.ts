@@ -5,6 +5,8 @@ import { Organization } from '../organization.interface';
 import { Router } from '@angular/router';
 import { DataTableComponent, Controls, PageChange, SearchChange } from '../../data-table/data-table';
 
+import { AuthService } from '../../services/auth.service';
+
 @Component({
   selector: 'app-organization-list',
   templateUrl: './organization-list.html',
@@ -15,12 +17,17 @@ import { DataTableComponent, Controls, PageChange, SearchChange } from '../../da
 export class OrganizationListComponent {
   private organizationService = inject(OrganizationService);
   private router = inject(Router);
+  private authService = inject(AuthService);
 
   organizations = signal<Organization[]>([]);
   totalItems = signal(0);
   pageSize = signal(20);
   searchTerm = signal('');
   searchField = signal<keyof Organization | 'all'>('all');
+  canAdd = signal(false);
+  canEdit = signal(false);
+  canDelete = signal(false);
+  canView = signal(false);
 
   controls: Controls = {
     columns: [
@@ -34,6 +41,11 @@ export class OrganizationListComponent {
 
   constructor() {
     this.loadOrganizations();
+    const userRole = this.authService.getUser()?.role;
+    this.canAdd.set(userRole === 'admin');
+    this.canEdit.set(userRole === 'admin');
+    this.canDelete.set(userRole === 'admin');
+    this.canView.set(userRole === 'admin');
   }
 
   loadOrganizations(): void {
@@ -70,6 +82,10 @@ export class OrganizationListComponent {
 
   editOrganization(org: Organization): void {
     this.router.navigate(['/organizations/edit', org.id]);
+  }
+
+  viewOrganization(org: Organization): void {
+    this.router.navigate(['/organizations/view', org.id]);
   }
 
   deleteOrganization(id: string): void {

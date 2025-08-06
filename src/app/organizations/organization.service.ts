@@ -1,8 +1,10 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { Organization } from './organization.interface';
+import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class OrganizationService {
+  private authService = inject(AuthService);
   private organizations = signal<Organization[]>([
     { id: 'org1', name: 'Head Office', createdAt: new Date().toISOString() },
     { id: 'org2', name: 'Branch A', parentId: 'org1', createdAt: new Date().toISOString() },
@@ -20,7 +22,14 @@ export class OrganizationService {
     organizations: Organization[];
     totalItems: number;
   } {
+    const user = this.authService.getUser();
     let filtered = this.organizations();
+
+    if (user && user.role !== 'admin') {
+      const userOrgId = user.organization;
+      const descendantIds = this.getDescendantOrgIds(userOrgId);
+      filtered = filtered.filter(org => org.id === userOrgId || descendantIds.has(org.id));
+    }
 
     if (searchTerm) {
       searchTerm = searchTerm.toLowerCase();
@@ -42,6 +51,22 @@ export class OrganizationService {
     const paginated = filtered.slice(startIndex, endIndex);
 
     return { organizations: paginated, totalItems };
+  }
+
+  private getDescendantOrgIds(parentId: string): Set<string> {
+    const descendantIds = new Set<string>();
+    const queue = [parentId];
+    const allOrgs = this.organizations();
+
+    while (queue.length > 0) {
+      const currentOrgId = queue.shift()!;
+      const children = allOrgs.filter(org => org.parentId === currentOrgId);
+      for (const child of children) {
+        descendantIds.add(child.id);
+        queue.push(child.id);
+      }
+    }
+    return descendantIds;
   }
 
   getOrganizationById(id: string): Organization | undefined {

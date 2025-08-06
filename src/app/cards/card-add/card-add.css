@@ -1,8 +1,12 @@
-.form-container {
+/* .form-container {
   padding: 2rem;
 }
 
 .card-form-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
   padding: 1.5rem;
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -10,11 +14,94 @@
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  flex: 1;
+  min-width: 150px;
+  margin-bottom: 0;
 }
 
 .form-actions {
   display: flex;
   gap: 1rem;
   margin-top: 1.5rem;
+} */
+
+
+.form-container {
+  padding: 2rem;
+  background-color: var(--background-dark);
+  color: var(--text-light);
+}
+
+h1 {
+  color: var(--primary-color);
+  text-shadow: 0 0 10px rgba(0, 194, 255, 0.7);
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+input[type="text"],
+textarea,
+select,
+input[type="date"] {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--background-light);
+  color: var(--text-light);
+  font-size: 1rem;
+}
+
+input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.form-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.form-actions button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--primary-color);
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: background-color var(--animation-duration) var(--animation-easing);
+}
+
+.form-actions button:hover {
+  background-color: var(--accent-color);
+}
+
+.form-actions button:disabled {
+  background-color: var(--border-color);
+  cursor: not-allowed;
+}
+
+.form-actions .btn-secondary {
+  background-color: var(--secondary-color);
+}
+
+.form-actions .btn-secondary:hover {
+  background-color: var(--accent-color);
+}
+
+.form-group select {
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%20viewBox%3D%220%200%20292.4%20292.4%22%3E%3Cpath%20fill%3D%22%23E0E0E0%22%20d%3D%22M287%2C197.2L159.7%2C69.8c-3-3-7.9-3-10.9%2C0L5.4%2C197.2c-3%2C3-3%2C7.9%2C0%2C10.9l2.2%2C2.2c3%2C3%2C7.9%2C3%2C10.9%2C0l130.3-130.3l130.3%2C130.3c3%2C3%2C7.9%2C3%2C10.9%2C0l2.2-2.2C290%2C205.1%2C290%2C200.2%2C287%2C197.2z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 0.7em top 50%, 0 0;
+  background-size: 0.65em auto, 100%;
 }

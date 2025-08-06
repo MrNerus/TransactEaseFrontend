@@ -38,11 +38,16 @@ export class DataTableComponent {
   totalItems = input(0);
   pageSize = input(20);
   pageSizeOptions = input([5, 10, 20, 50]);
+  canAdd = input(false);
+  canEdit = input(false);
+  canDelete = input(false);
+  canView = input(false);
 
   searchChange = output<SearchChange>();
   pageChange = output<PageChange>();
   add = output<void>();
   edit = output<any>();
+  view = output<any>();
   delete = output<any>();
 
   currentPage = signal(1);

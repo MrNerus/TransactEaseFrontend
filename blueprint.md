@@ -33,7 +33,7 @@ TransactEase is a modern, interactive financial management application built wit
 - **Steps**:
   1. **Phase 1: Core Structure and Card Addition**
      - Created the `Card` interface and `CardService`.
-     - Implemented a form to add multiple cards at once.
+     - Implemented a form to add multiple cards at once, with each card's details displayed on a single line.
      - Added the new routes to the application.
   2. **Phase 2: Card Transfer**
      - Implemented a form to transfer multiple cards to different organizational levels.

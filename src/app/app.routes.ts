@@ -10,8 +10,10 @@ import { AccountsComponent } from './accounts/accounts';
 import { ProfileComponent } from './profile/profile';
 import { OrganizationListComponent } from './organizations/organization-list/organization-list';
 import { OrganizationFormComponent } from './organizations/organization-form/organization-form';
+import { OrganizationViewComponent } from './organizations/organization-view/organization-view';
 import { UserListComponent } from './users/user-list/user-list';
 import { UserFormComponent } from './users/user-form/user-form';
+import { UserViewComponent } from './users/user-view/user-view';
 import { StaffListComponent } from './staffs/staff-list/staff-list';
 import { StaffFormComponent } from './staffs/staff-form/staff-form';
 import { CashbackSchemeListComponent } from './cashback-schemes/cashback-scheme-list';
@@ -46,6 +48,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'organizations/view/:id',
+    component: OrganizationViewComponent,
+    canActivate: [authGuard]
+  },
+  {
     path: 'users',
     component: UserListComponent,
     canActivate: [authGuard]
@@ -58,6 +65,11 @@ export const routes: Routes = [
   {
     path: 'users/edit/:id',
     component: UserFormComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'users/view/:id',
+    component: UserViewComponent,
     canActivate: [authGuard]
   },
   {

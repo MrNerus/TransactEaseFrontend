@@ -6,7 +6,11 @@ export class AuthService {
   private router = inject(Router);
 
   login(username: string) {
-    localStorage.setItem('user', JSON.stringify({ username, role: 'admin' }));
+    if (username.toLowerCase() === 'staff') {
+      localStorage.setItem('user', JSON.stringify({ username, role: 'staff', organization: 'org2' }));
+    } else {
+      localStorage.setItem('user', JSON.stringify({ username, role: 'admin', organization: 'org1' }));
+    }
     this.router.navigate(['/dashboard']);
   }
 

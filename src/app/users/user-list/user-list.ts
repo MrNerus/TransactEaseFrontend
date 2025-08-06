@@ -4,6 +4,7 @@ import { UserService } from '../user.service';
 import { User } from '../user.interface';
 import { Router } from '@angular/router';
 import { DataTableComponent, Controls, PageChange, SearchChange } from '../../data-table/data-table';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-user-list',
@@ -15,12 +16,17 @@ import { DataTableComponent, Controls, PageChange, SearchChange } from '../../da
 export class UserListComponent {
   private userService = inject(UserService);
   private router = inject(Router);
+  private authService = inject(AuthService);
 
   users = signal<User[]>([]);
   totalItems = signal(0);
   pageSize = signal(20);
   searchTerm = signal('');
   searchField = signal<keyof User | 'all'>('all');
+  canAdd = signal(false);
+  canEdit = signal(false);
+  canDelete = signal(false);
+  canView = signal(false);
 
   controls: Controls = {
     columns: [
@@ -37,6 +43,11 @@ export class UserListComponent {
 
   constructor() {
     this.loadUsers();
+    const userRole = this.authService.getUser()?.role;
+    this.canAdd.set(userRole === 'admin');
+    this.canEdit.set(userRole === 'admin');
+    this.canDelete.set(userRole === 'admin');
+    this.canView.set(userRole === 'admin');
   }
 
   loadUsers(): void {
@@ -73,6 +84,10 @@ export class UserListComponent {
 
   editUser(user: User): void {
     this.router.navigate(['/users/edit', user.id]);
+  }
+
+  viewUser(user: User): void {
+    this.router.navigate(['/users/view', user.id]);
   }
 
   deleteUser(id: string): void {

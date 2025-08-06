@@ -7,7 +7,9 @@
         <option [value]="field">{{ field | titlecase }}</option>
       }
     </select>
-    <button (click)="add.emit()" title="Add New"><span class="material-icons">add</span></button>
+    @if (canAdd()) {
+      <button (click)="add.emit()" title="Add New"><span class="material-icons">add</span></button>
+    }
   </div>
 
   <table>
@@ -34,8 +36,15 @@
             </td>
           }
           <td>
-            <button (click)="edit.emit(row)" title="Edit"><span class="material-icons">edit</span></button>
-            <button (click)="delete.emit(row.id)" title="Delete"><span class="material-icons">delete</span></button>
+            @if (canView()) {
+              <button (click)="view.emit(row)" title="View"><span class="material-icons">visibility</span></button>
+            }
+            @if (canEdit()) {
+              <button (click)="edit.emit(row)" title="Edit"><span class="material-icons">edit</span></button>
+            }
+            @if (canDelete()) {
+              <button (click)="delete.emit(row.id)" title="Delete"><span class="material-icons">delete</span></button>
+            }
           </td>
         </tr>
       }

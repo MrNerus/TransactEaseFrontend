@@ -4,6 +4,7 @@ import { StaffService } from '../staff.service';
 import { Staff } from '../staff.interface';
 import { Router } from '@angular/router';
 import { DataTableComponent, Controls, PageChange, SearchChange } from '../../data-table/data-table';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-staff-list',
@@ -15,12 +16,17 @@ import { DataTableComponent, Controls, PageChange, SearchChange } from '../../da
 export class StaffListComponent {
   private staffService = inject(StaffService);
   private router = inject(Router);
+  private authService = inject(AuthService);
 
   staffs = signal<Staff[]>([]);
   totalItems = signal(0);
   pageSize = signal(20);
   searchTerm = signal('');
   searchField = signal<keyof Staff | 'all'>('all');
+  canAdd = signal(false);
+  canEdit = signal(false);
+  canDelete = signal(false);
+  canView = signal(false);
 
   controls: Controls = {
     columns: [
@@ -37,6 +43,11 @@ export class StaffListComponent {
 
   constructor() {
     this.loadStaffs();
+    const userRole = this.authService.getUser()?.role;
+    this.canAdd.set(userRole === 'admin');
+    this.canEdit.set(userRole === 'admin');
+    this.canDelete.set(userRole === 'admin');
+    this.canView.set(userRole === 'admin');
   }
 
   loadStaffs(): void {
@@ -73,6 +84,10 @@ export class StaffListComponent {
 
   editStaff(staff: Staff): void {
     this.router.navigate(['/staffs/edit', staff.id]);
+  }
+
+  viewStaff(staff: Staff): void {
+    this.router.navigate(['/staffs/view', staff.id]);
   }
 
   deleteStaff(id: string): void {
