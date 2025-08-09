@@ -78,6 +78,10 @@ export class CashbackSchemeListComponent {
     this.router.navigate(['/cashback-schemes/edit', scheme.id]);
   }
 
+  viewCashbackScheme(scheme: CashbackScheme): void {
+    this.router.navigate(['/cashback-schemes/view', scheme.id]);
+  }
+
   deleteCashbackScheme(id: string): void {
     if (confirm(`Are you sure you want to delete scheme ${id}?`)) {
       this.cashbackSchemeService.deleteCashbackScheme(id);

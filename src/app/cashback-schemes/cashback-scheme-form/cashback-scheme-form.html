@@ -1,9 +1,5 @@
 <div class="form-container">
-  @if (isEditMode()) {
-    <h1>Edit Cashback Scheme</h1>
-  } @else {
-    <h1>Add Cashback Scheme</h1>
-  }
+  <h1>{{ isViewMode() ? 'View Cashback Scheme' : (isEditMode() ? 'Edit Cashback Scheme' : 'Add Cashback Scheme') }}</h1>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="name">Name</label>
@@ -18,12 +14,10 @@
       <input type="checkbox" id="isActive" formControlName="isActive">
     </div>
     <div class="form-actions">
-      @if (isEditMode()) {
-        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Save</button>
-      } @else {
-        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Add</button>
+      @if (!isViewMode()) {
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">{{ isEditMode() ? 'Save' : 'Add' }}</button>
       }
-      <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">{{ isViewMode() ? 'Back' : 'Cancel' }}</button> 
     </div>
   </form>
 </div>

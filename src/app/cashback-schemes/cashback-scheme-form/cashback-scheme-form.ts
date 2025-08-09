@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CashbackSchemeService } from '../cashback-scheme.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-cashback-scheme-form',
@@ -9,7 +10,7 @@ import { CashbackSchemeService } from '../cashback-scheme.service';
   styleUrls: ['./cashback-scheme-form.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [ReactiveFormsModule]
+  imports: [ReactiveFormsModule, CommonModule]
 })
 export class CashbackSchemeFormComponent {
   private fb = inject(FormBuilder);
@@ -25,15 +26,24 @@ export class CashbackSchemeFormComponent {
   });
 
   isEditMode = signal(false);
+  isViewMode = signal(false);
 
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
+    const url = this.router.url;
+
     if (id) {
-      this.isEditMode.set(true);
       const scheme = this.cashbackSchemeService.getCashbackSchemeById(id);
       if (scheme) {
         this.form.patchValue(scheme);
       }
+    }
+
+    if (url.includes('view')) {
+      this.isViewMode.set(true);
+      this.form.disable();
+    } else if (url.includes('edit')) {
+      this.isEditMode.set(true);
     }
   }
 

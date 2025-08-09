@@ -1,0 +1,40 @@
+<div class="container">
+  <h2>View Card</h2>
+  @if (card) {
+    <div class="card-details">
+      <div>
+        <label>Card Number:</label>
+        <span>{{ card.cardNumber }}</span>
+      </div>
+      <div>
+        <label>Card Type:</label>
+        <span>{{ card.cardType }}</span>
+      </div>
+      <div>
+        <label>Status:</label>
+        <span>{{ card.status }}</span>
+      </div>
+      <div>
+        <label>Organization ID:</label>
+        <span>{{ card.organizationId }}</span>
+      </div>
+      <div>
+        <label>User ID:</label>
+        <span>{{ card.userId }}</span>
+      </div>
+      <div>
+        <label>Issue Date:</label>
+        <span>{{ card.issueDate | date }}</span>
+      </div>
+      <div>
+        <label>Expiry Date:</label>
+        <span>{{ card.expiryDate | date }}</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button type="button" (click)="onCancel()">Back</button>
+    </div>
+  } @else {
+    <p>Card not found.</p>
+  }
+</div>

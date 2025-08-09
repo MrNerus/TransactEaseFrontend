@@ -135,6 +135,10 @@ export class CardService {
     );
   }
 
+  getCardById(id: string): Card | undefined {
+    return this.cards().find(card => card.id === id);
+  }
+
   revokeCard(cardId: string): void {
     this.cards.update(cards =>
       cards.map(card =>

@@ -27,15 +27,24 @@ export class UserFormComponent {
   });
 
   isEditMode = signal(false);
+  isViewMode = signal(false);
 
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
+    const url = this.router.url;
+
     if (id) {
-      this.isEditMode.set(true);
       const user = this.userService.getUserById(id);
       if (user) {
         this.form.patchValue(user);
       }
+    }
+
+    if (url.includes('view')) {
+      this.isViewMode.set(true);
+      this.form.disable();
+    } else if (url.includes('edit')) {
+      this.isEditMode.set(true);
     }
   }
 
@@ -49,8 +58,9 @@ export class UserFormComponent {
       this.router.navigate(['/users']);
     }
   }
+
   onCancel() {
     this.form.reset();
     this.router.navigate(['/users']);
-  }    
+  }
 }

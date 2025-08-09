@@ -1,0 +1,10 @@
+<app-data-table
+  [data]="schemes()"
+  [controls]="{ columns: columns, searchableFields: [] }"
+  [totalItems]="totalItems()"
+  [pageSize]="pageSize()"
+  (pageChange)="onPageChange($event)"
+  (add)="addScheme()"
+  (edit)="editScheme($event)"
+  (view)="viewScheme($event)"
+></app-data-table>

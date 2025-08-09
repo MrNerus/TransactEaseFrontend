@@ -24,15 +24,24 @@ export class OrganizationFormComponent {
   });
 
   isEditMode = signal(false);
+  isViewMode = signal(false);
 
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
+    const url = this.router.url;
+
     if (id) {
-      this.isEditMode.set(true);
       const organization = this.organizationService.getOrganizationById(id);
       if (organization) {
         this.form.patchValue(organization);
       }
+    }
+
+    if (url.includes('view')) {
+      this.isViewMode.set(true);
+      this.form.disable();
+    } else if (url.includes('edit')) {
+      this.isEditMode.set(true);
     }
   }
 
@@ -46,8 +55,9 @@ export class OrganizationFormComponent {
       this.router.navigate(['/organizations']);
     }
   }
+
   onCancel() {
     this.form.reset();
     this.router.navigate(['/organizations']);
-  }  
+  }
 }

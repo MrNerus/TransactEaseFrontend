@@ -10,10 +10,9 @@ import { AccountsComponent } from './accounts/accounts';
 import { ProfileComponent } from './profile/profile';
 import { OrganizationListComponent } from './organizations/organization-list/organization-list';
 import { OrganizationFormComponent } from './organizations/organization-form/organization-form';
-import { OrganizationViewComponent } from './organizations/organization-view/organization-view';
+
 import { UserListComponent } from './users/user-list/user-list';
 import { UserFormComponent } from './users/user-form/user-form';
-import { UserViewComponent } from './users/user-view/user-view';
 import { StaffListComponent } from './staffs/staff-list/staff-list';
 import { StaffFormComponent } from './staffs/staff-form/staff-form';
 import { CashbackSchemeListComponent } from './cashback-schemes/cashback-scheme-list';
@@ -24,6 +23,7 @@ import { CardListComponent } from './cards/card-list/card-list';
 import { CardAddComponent } from './cards/card-add/card-add';
 import { CardTransferComponent } from './cards/card-transfer/card-transfer';
 import { CardAssignComponent } from './cards/card-assign/card-assign';
+import { CardViewComponent } from './cards/card-view/card-view';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -49,7 +49,7 @@ export const routes: Routes = [
   },
   {
     path: 'organizations/view/:id',
-    component: OrganizationViewComponent,
+    component: OrganizationFormComponent,
     canActivate: [authGuard]
   },
   {
@@ -69,7 +69,7 @@ export const routes: Routes = [
   },
   {
     path: 'users/view/:id',
-    component: UserViewComponent,
+    component: UserFormComponent,
     canActivate: [authGuard]
   },
   {
@@ -84,6 +84,11 @@ export const routes: Routes = [
   },
   {
     path: 'staffs/edit/:id',
+    component: StaffFormComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'staffs/view/:id',
     component: StaffFormComponent,
     canActivate: [authGuard]
   },
@@ -127,6 +132,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'cashback-schemes/view/:id',
+    component: CashbackSchemeFormComponent,
+    canActivate: [authGuard],
+  },
+  {
     path: 'reports',
     component: ReportsComponent,
     canActivate: [authGuard],
@@ -159,7 +169,12 @@ export const routes: Routes = [
   {
     path: 'cards/assign/:id',
     component: CardAssignComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard]
+  },
+  {
+    path: 'cards/view/:id',
+    component: CardViewComponent,
+    canActivate: [authGuard]
   },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
 ];

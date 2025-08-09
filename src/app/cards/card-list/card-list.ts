@@ -56,4 +56,8 @@ export class CardListComponent {
   assignCard(card: Card): void {
     this.router.navigate(['/cards/assign', card.id]);
   }
+
+  viewCard(card: Card): void {
+    this.router.navigate(['/cards/view', card.id]);
+  }
 }

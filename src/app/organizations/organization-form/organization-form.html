@@ -1,5 +1,5 @@
 <div class="form-container">
-  <h1>{{ isEditMode() ? 'Edit Organization' : 'Add Organization' }}</h1>
+  <h1>{{ isViewMode() ? 'View Organization' : (isEditMode() ? 'Edit Organization' : 'Add Organization') }}</h1>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="name">Name</label>
@@ -10,8 +10,10 @@
       <input type="text" id="parentId" formControlName="parentId">
     </div>
     <div class="form-actions">
-      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">{{ isEditMode() ? 'Save' : 'Add' }}</button>
-      <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+      @if (!isViewMode()) {
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">{{ isEditMode() ? 'Save' : 'Add' }}</button>
+      }
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">{{ isViewMode() ? 'Back' : 'Cancel' }}</button> 
     </div>
   </form>
 </div>

@@ -27,15 +27,24 @@ export class StaffFormComponent {
   });
 
   isEditMode = signal(false);
+  isViewMode = signal(false);
 
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
+    const url = this.router.url;
+
     if (id) {
-      this.isEditMode.set(true);
       const staff = this.staffService.getStaffById(id);
       if (staff) {
         this.form.patchValue(staff);
       }
+    }
+
+    if (url.includes('view')) {
+      this.isViewMode.set(true);
+      this.form.disable();
+    } else if (url.includes('edit')) {
+      this.isEditMode.set(true);
     }
   }
 
@@ -49,8 +58,9 @@ export class StaffFormComponent {
       this.router.navigate(['/staffs']);
     }
   }
+
   onCancel() {
     this.form.reset();
     this.router.navigate(['/staffs']);
-  }    
+  }
 }
