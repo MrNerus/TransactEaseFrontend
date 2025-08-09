@@ -4,7 +4,7 @@ import { UserService } from '../user.service';
 import { User } from '../user.interface';
 import { Router } from '@angular/router';
 import { DataTableComponent, Controls, PageChange, SearchChange } from '../../data-table/data-table';
-import { AuthService } from '../../services/auth.service';
+import { PermissionService } from '../../services/permission.service';
 
 @Component({
   selector: 'app-user-list',
@@ -16,7 +16,7 @@ import { AuthService } from '../../services/auth.service';
 export class UserListComponent {
   private userService = inject(UserService);
   private router = inject(Router);
-  private authService = inject(AuthService);
+  private permissionService = inject(PermissionService);
 
   users = signal<User[]>([]);
   totalItems = signal(0);
@@ -43,11 +43,10 @@ export class UserListComponent {
 
   constructor() {
     this.loadUsers();
-    const userRole = this.authService.getUser()?.role;
-    this.canAdd.set(userRole === 'admin');
-    this.canEdit.set(userRole === 'admin');
-    this.canDelete.set(userRole === 'admin');
-    this.canView.set(userRole === 'admin');
+    this.canAdd.set(this.permissionService.hasPermission('users', 'canAdd'));
+    this.canEdit.set(this.permissionService.hasPermission('users', 'canEdit'));
+    this.canDelete.set(this.permissionService.hasPermission('users', 'canDelete'));
+    this.canView.set(this.permissionService.hasPermission('users', 'canView'));
   }
 
   loadUsers(): void {

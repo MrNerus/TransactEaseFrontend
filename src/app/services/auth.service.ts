@@ -1,30 +1,71 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { User } from '../users/user.interface';
+import { ROLES } from './permission.config';
 
-@Injectable({ providedIn: 'root' })
+const USERS: User[] = [
+  {
+    id: 'user001',
+    fullName: 'Admin User',
+    email: 'admin',
+    organizationId: 'org001',
+    role: ROLES.find(r => r.name === 'admin')!,
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00.000Z',
+    permissions: {
+      users: { canDelete: false, canEdit: true },
+    },
+  },
+  {
+    id: 'user002',
+    fullName: 'Editor User',
+    email: 'editor@transactease.com',
+    organizationId: 'org002',
+    role: ROLES.find(r => r.name === 'editor')!,
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00.000Z',
+    permissions: {
+      users: { canDelete: true },
+    },
+  },
+  {
+    id: 'user003',
+    fullName: 'Viewer User',
+    email: 'viewer@transactease.com',
+    organizationId: 'org003',
+    role: ROLES.find(r => r.name === 'viewer')!,
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00.000Z',
+  },
+];
+
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
   private router = inject(Router);
+  private currentUser = signal<User | undefined>(undefined);
 
-  login(username: string) {
-    if (username.toLowerCase() === 'staff') {
-      localStorage.setItem('user', JSON.stringify({ username, role: 'staff', organization: 'org2' }));
-    } else {
-      localStorage.setItem('user', JSON.stringify({ username, role: 'admin', organization: 'org1' }));
+  login(email: string): boolean {
+    const user = USERS.find(u => u.email === email);
+    if (user) {
+      this.currentUser.set(user);
+      this.router.navigate(['/dashboard']);
+      return true;
     }
-    this.router.navigate(['/dashboard']);
+    return false;
   }
 
-  logout() {
-    localStorage.removeItem('user');
+  logout(): void {
+    this.currentUser.set(undefined);
     this.router.navigate(['/login']);
   }
 
-  isLoggedIn() {
-    return !!localStorage.getItem('user');
+  isAuthenticated(): boolean {
+    return !!this.currentUser();
   }
 
-  getUser() {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+  getUser(): User | undefined {
+    return this.currentUser();
   }
 }

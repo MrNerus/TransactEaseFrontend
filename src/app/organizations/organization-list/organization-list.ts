@@ -4,8 +4,7 @@ import { OrganizationService } from '../organization.service';
 import { Organization } from '../organization.interface';
 import { Router } from '@angular/router';
 import { DataTableComponent, Controls, PageChange, SearchChange } from '../../data-table/data-table';
-
-import { AuthService } from '../../services/auth.service';
+import { PermissionService } from '../../services/permission.service';
 
 @Component({
   selector: 'app-organization-list',
@@ -17,7 +16,7 @@ import { AuthService } from '../../services/auth.service';
 export class OrganizationListComponent {
   private organizationService = inject(OrganizationService);
   private router = inject(Router);
-  private authService = inject(AuthService);
+  private permissionService = inject(PermissionService);
 
   organizations = signal<Organization[]>([]);
   totalItems = signal(0);
@@ -41,11 +40,10 @@ export class OrganizationListComponent {
 
   constructor() {
     this.loadOrganizations();
-    const userRole = this.authService.getUser()?.role;
-    this.canAdd.set(userRole === 'admin');
-    this.canEdit.set(userRole === 'admin');
-    this.canDelete.set(userRole === 'admin');
-    this.canView.set(userRole === 'admin');
+    this.canAdd.set(this.permissionService.hasPermission('organizations', 'canAdd'));
+    this.canEdit.set(this.permissionService.hasPermission('organizations', 'canEdit'));
+    this.canDelete.set(this.permissionService.hasPermission('organizations', 'canDelete'));
+    this.canView.set(this.permissionService.hasPermission('organizations', 'canView'));
   }
 
   loadOrganizations(): void {

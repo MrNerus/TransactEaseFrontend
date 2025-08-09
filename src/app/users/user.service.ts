@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { User } from './user.interface';
+import { ROLES } from '../services/permission.config';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -7,9 +8,9 @@ export class UserService {
     {
       id: 'user1',
       fullName: 'Alice Smith',
-      email: 'alice@example.com',
+      email: 'admin',
       organizationId: 'org1',
-      role: 'Admin',
+      role: ROLES.find(r => r.name === 'admin')!,
       isActive: true,
       createdAt: new Date().toISOString(),
     },
@@ -18,7 +19,7 @@ export class UserService {
       fullName: 'Bob Johnson',
       email: 'bob@example.com',
       organizationId: 'org2',
-      role: 'Manager',
+      role: ROLES.find(r => r.name === 'viewer')!,
       isActive: true,
       createdAt: new Date().toISOString(),
     },
@@ -27,7 +28,7 @@ export class UserService {
       fullName: 'Charlie Brown',
       email: 'charlie@example.com',
       organizationId: 'org4',
-      role: 'Operator',
+      role: ROLES.find(r => r.name === 'editor')!,
       isActive: true,
       createdAt: new Date().toISOString(),
     },
@@ -36,7 +37,7 @@ export class UserService {
       fullName: 'Diana Prince',
       email: 'diana@example.com',
       organizationId: 'org5',
-      role: 'Customer',
+      role: ROLES.find(r => r.name === 'admin')!,
       isActive: true,
       createdAt: new Date().toISOString(),
     },
@@ -45,7 +46,7 @@ export class UserService {
       fullName: 'Eve Adams',
       email: 'eve@example.com',
       organizationId: 'org1',
-      role: 'Customer',
+      role: ROLES.find(r => r.name === 'viewer')!,
       isActive: false,
       createdAt: new Date().toISOString(),
     },

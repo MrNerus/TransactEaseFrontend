@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { DataTableComponent, ColumnDef, PageChange, SearchChange } from '../data-table/data-table';
 import { CashbackSchemeService } from './cashback-scheme.service';
+import { PermissionService } from '../services/permission.service';
 
 interface CashbackScheme {
   id: string;
@@ -22,6 +23,7 @@ interface CashbackScheme {
 export class CashbackSchemeListComponent {
   private router = inject(Router);
   private cashbackSchemeService = inject(CashbackSchemeService);
+  private permissionService = inject(PermissionService);
 
   cashbackSchemes = signal<CashbackScheme[]>([]);
 
@@ -29,6 +31,10 @@ export class CashbackSchemeListComponent {
   pageSize = signal(10);
   searchTerm = signal('');
   searchField = signal<keyof CashbackScheme | 'all'>('all');
+  canAdd = signal(false);
+  canEdit = signal(false);
+  canDelete = signal(false);
+  canView = signal(false);
 
   columns: ColumnDef[] = [
     { key: 'id', label: 'ID' },
@@ -39,6 +45,10 @@ export class CashbackSchemeListComponent {
 
   constructor() {
     this.loadCashbackSchemes();
+    this.canAdd.set(this.permissionService.hasPermission('cashback-schemes', 'canAdd'));
+    this.canEdit.set(this.permissionService.hasPermission('cashback-schemes', 'canEdit'));
+    this.canDelete.set(this.permissionService.hasPermission('cashback-schemes', 'canDelete'));
+    this.canView.set(this.permissionService.hasPermission('cashback-schemes', 'canView'));
   }
 
   loadCashbackSchemes(): void {

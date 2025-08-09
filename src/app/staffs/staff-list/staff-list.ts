@@ -4,7 +4,7 @@ import { StaffService } from '../staff.service';
 import { Staff } from '../staff.interface';
 import { Router } from '@angular/router';
 import { DataTableComponent, Controls, PageChange, SearchChange } from '../../data-table/data-table';
-import { AuthService } from '../../services/auth.service';
+import { PermissionService } from '../../services/permission.service';
 
 @Component({
   selector: 'app-staff-list',
@@ -16,7 +16,7 @@ import { AuthService } from '../../services/auth.service';
 export class StaffListComponent {
   private staffService = inject(StaffService);
   private router = inject(Router);
-  private authService = inject(AuthService);
+  private permissionService = inject(PermissionService);
 
   staffs = signal<Staff[]>([]);
   totalItems = signal(0);
@@ -43,11 +43,10 @@ export class StaffListComponent {
 
   constructor() {
     this.loadStaffs();
-    const userRole = this.authService.getUser()?.role;
-    this.canAdd.set(userRole === 'admin');
-    this.canEdit.set(userRole === 'admin');
-    this.canDelete.set(userRole === 'admin');
-    this.canView.set(userRole === 'admin');
+    this.canAdd.set(this.permissionService.hasPermission('staffs', 'canAdd'));
+    this.canEdit.set(this.permissionService.hasPermission('staffs', 'canEdit'));
+    this.canDelete.set(this.permissionService.hasPermission('staffs', 'canDelete'));
+    this.canView.set(this.permissionService.hasPermission('staffs', 'canView'));
   }
 
   loadStaffs(): void {

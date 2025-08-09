@@ -25,8 +25,8 @@ export class OrganizationService {
     const user = this.authService.getUser();
     let filtered = this.organizations();
 
-    if (user && user.role !== 'admin') {
-      const userOrgId = user.organization;
+    if (user && user.role.name !== 'admin') {
+      const userOrgId = user.organizationId;
       const descendantIds = this.getDescendantOrgIds(userOrgId);
       filtered = filtered.filter(org => org.id === userOrgId || descendantIds.has(org.id));
     }

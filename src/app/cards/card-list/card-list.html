@@ -7,8 +7,14 @@
   (add)="addCard()"
   (edit)="assignCard($event)"
   (view)="viewCard($event)"
+  [canAdd]="canAdd()"
+  [canEdit]="canEdit()"
+  [canDelete]="canDelete()"
+  [canView]="canView()"
 >
   <ng-container>
-    <button (click)="transferCards()">Transfer Cards</button>
+    @if (canEdit()) {
+      <button (click)="transferCards()">Transfer Cards</button>
+    }
   </ng-container>
 </app-data-table>

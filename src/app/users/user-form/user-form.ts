@@ -3,6 +3,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { CommonModule } from '@angular/common';
+import { ROLES } from '../../services/permission.config';
+import { Role } from '../user.interface';
 
 @Component({
   selector: 'app-user-form',
@@ -22,10 +24,11 @@ export class UserFormComponent {
     fullName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     organizationId: ['', Validators.required],
-    role: ['', Validators.required],
+    role: [null as Role | null, Validators.required],
     isActive: [true, Validators.required]
   });
 
+  roles = ROLES;
   isEditMode = signal(false);
   isViewMode = signal(false);
 
@@ -36,7 +39,10 @@ export class UserFormComponent {
     if (id) {
       const user = this.userService.getUserById(id);
       if (user) {
-        this.form.patchValue(user);
+        this.form.patchValue({
+          ...user,
+          role: user.role
+        });
       }
     }
 
@@ -50,10 +56,18 @@ export class UserFormComponent {
 
   onSubmit() {
     if (this.form.valid) {
+      const formValue = this.form.value;
+      const selectedRole = ROLES.find(r => r.name === (formValue.role as any).name);
+
+      const userPayload = {
+        ...formValue,
+        role: selectedRole
+      };
+
       if (this.isEditMode()) {
-        this.userService.updateUser(this.form.value as any);
+        this.userService.updateUser(userPayload as any);
       } else {
-        this.userService.addUser(this.form.value as any);
+        this.userService.addUser(userPayload as any);
       }
       this.router.navigate(['/users']);
     }
@@ -62,5 +76,9 @@ export class UserFormComponent {
   onCancel() {
     this.form.reset();
     this.router.navigate(['/users']);
+  }
+
+  compareRoles(r1: Role, r2: Role): boolean {
+    return r1 && r2 ? r1.name === r2.name : r1 === r2;
   }
 }

@@ -26,19 +26,22 @@ TransactEase is a modern, interactive financial management application built wit
 - **Cashback Schemes**: Create, edit, and delete cashback schemes.
 - **Reports**: Generate and view financial reports.
 - **Audit Logs**: Track user activity and system events.
+- **Card Management**: Add, transfer, and assign cards.
+- **RBAC**: Flexible and configurable role-based access control.
 
-## Current Task: Add Card Module
+## Current Task: RBAC Inconsistency Fix
 
-- **Objective**: Implement a new module for card management with features for adding, transferring, and assigning cards.
+- **Objective**: Fix inconsistencies with RBAC to have configurable add, edit, view, delete for roles and same overrideable for users.
 - **Steps**:
-  1. **Phase 1: Core Structure and Card Addition**
-     - Created the `Card` interface and `CardService`.
-     - Implemented a form to add multiple cards at once, with each card's details displayed on a single line.
-     - Added the new routes to the application.
-  2. **Phase 2: Card Transfer**
-     - Implemented a form to transfer multiple cards to different organizational levels.
-     - Added logic to differentiate between admin and branch office users.
-  3. **Phase 3: Card Assignment and Management**
-     - Created a form for staff to assign cards to users.
-     - Implemented features for revoking cards and managing their expiry dates.
-     - Added a data table to view and manage card assignments.
+  1. **Phase 1: Refactor RBAC Core**
+     - Defined new `Permission` and `Role` interfaces.
+     - Updated the `User` interface to use the new `Role` interface and added an optional `permissions` property for user-specific overrides.
+     - Replaced the old `ROLE_PERMISSIONS` with a new `ROLES` array that uses the new interfaces.
+     - Updated the `PermissionService` to check for permissions based on a feature and an action, and to correctly handle user-specific overrides and role-based permissions.
+  2. **Phase 2: Update Application to New RBAC**
+     - Updated the `authGuard` to use the new `feature` and `action` properties in the route data to check for permissions.
+     - Updated all routes that require permission checks to have the `feature` and `action` properties in their `data` object.
+     - Fixed all compilation errors to ensure the application builds successfully.
+  3. **Phase 3: UI and Data Table Updates**
+     - Updated the `user-form` to correctly handle the `Role` object.
+     - Updated the `data-table` component to correctly render the role name.

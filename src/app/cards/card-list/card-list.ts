@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Card } from '../card.interface';
 import { CardService } from '../card.service';
 import { DataTableComponent, ColumnDef, PageChange } from '../../data-table/data-table';
+import { PermissionService } from '../../services/permission.service';
 
 @Component({
   selector: 'app-card-list',
@@ -15,10 +16,15 @@ import { DataTableComponent, ColumnDef, PageChange } from '../../data-table/data
 export class CardListComponent {
   private router = inject(Router);
   private cardService = inject(CardService);
+  private permissionService = inject(PermissionService);
 
   cards = signal<Card[]>([]);
   totalItems = signal(0);
   pageSize = signal(10);
+  canAdd = signal(false);
+  canEdit = signal(false);
+  canDelete = signal(false);
+  canView = signal(false);
 
   columns: ColumnDef[] = [
     { key: 'cardNumber', label: 'Card Number' },
@@ -32,6 +38,10 @@ export class CardListComponent {
 
   constructor() {
     this.loadCards();
+    this.canAdd.set(this.permissionService.hasPermission('cards', 'canAdd'));
+    this.canEdit.set(this.permissionService.hasPermission('cards', 'canEdit'));
+    this.canDelete.set(this.permissionService.hasPermission('cards', 'canDelete'));
+    this.canView.set(this.permissionService.hasPermission('cards', 'canView'));
   }
 
   loadCards(page: number = 1): void {

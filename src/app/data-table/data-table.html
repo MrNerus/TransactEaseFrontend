@@ -30,6 +30,8 @@
                 {{ row[col.key] | date:'short' }}
               } @else if (col.isBoolean) {
                 {{ row[col.key] ? 'Yes' : 'No' }}
+                            } @else if (col.key === 'role') {
+                {{ row[col.key]?.name || 'N/A' }}
               } @else {
                 {{ row[col.key] || 'N/A' }}
               }
