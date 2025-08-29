@@ -29,19 +29,11 @@ TransactEase is a modern, interactive financial management application built wit
 - **Card Management**: Add, transfer, and assign cards.
 - **RBAC**: Flexible and configurable role-based access control.
 
-## Current Task: RBAC Inconsistency Fix
+## Current Task: Update Card Add UI
 
-- **Objective**: Fix inconsistencies with RBAC to have configurable add, edit, view, delete for roles and same overrideable for users.
+- **Objective**: Update the `card-add` component to have a grid layout and fix missing button styles.
 - **Steps**:
-  1. **Phase 1: Refactor RBAC Core**
-     - Defined new `Permission` and `Role` interfaces.
-     - Updated the `User` interface to use the new `Role` interface and added an optional `permissions` property for user-specific overrides.
-     - Replaced the old `ROLE_PERMISSIONS` with a new `ROLES` array that uses the new interfaces.
-     - Updated the `PermissionService` to check for permissions based on a feature and an action, and to correctly handle user-specific overrides and role-based permissions.
-  2. **Phase 2: Update Application to New RBAC**
-     - Updated the `authGuard` to use the new `feature` and `action` properties in the route data to check for permissions.
-     - Updated all routes that require permission checks to have the `feature` and `action` properties in their `data` object.
-     - Fixed all compilation errors to ensure the application builds successfully.
-  3. **Phase 3: UI and Data Table Updates**
-     - Updated the `user-form` to correctly handle the `Role` object.
-     - Updated the `data-table` component to correctly render the role name.
+  1. **Analyze Files**: Inspected the HTML and CSS files for the `card-add` component.
+  2. **Update CSS**: Modified `src/app/cards/card-add/card-add.css` to implement a grid layout for the form and added missing button styles.
+  3. **Update HTML**: Removed inline styles from `src/app/cards/card-add/card-add.html` and ensured correct button classes were applied.
+  4. **Verify Changes**: Compiled the application using `ng build` to ensure there were no compilation errors after the changes.
