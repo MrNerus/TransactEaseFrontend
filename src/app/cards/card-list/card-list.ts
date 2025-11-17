@@ -1,8 +1,9 @@
+import { Permission } from './../../users/user.interface';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Card } from '../card.interface';
 import { CardService } from '../card.service';
-import { DataTableComponent, ColumnDef, PageChange } from '../../data-table/data-table';
+import { DataTableComponent, ColumnDef, PageChange, TableAction } from '../../data-table/data-table';
 import { PermissionService } from '../../services/permission.service';
 
 @Component({
@@ -16,15 +17,11 @@ import { PermissionService } from '../../services/permission.service';
 export class CardListComponent {
   private router = inject(Router);
   private cardService = inject(CardService);
-  private permissionService = inject(PermissionService);
+  permissionService = inject(PermissionService);
 
   cards = signal<Card[]>([]);
   totalItems = signal(0);
   pageSize = signal(10);
-  canAdd = signal(false);
-  canEdit = signal(false);
-  canDelete = signal(false);
-  canView = signal(false);
 
   columns: ColumnDef[] = [
     { key: 'cardNumber', label: 'Card Number' },
@@ -36,12 +33,16 @@ export class CardListComponent {
     { key: 'expiryDate', label: 'Expiry Date', isDate: true },
   ];
 
+  actions: TableAction[] = [
+    { type: 'add', label: 'Add', icon: 'add', placement: 'global', permission: this.permissionService.getPermission('cards_add') },
+    { type: 'transfer', label: 'View', icon: 'visibility', placement: 'row', permission: this.permissionService.getPermission('cards_edit') },
+    { type: 'assign', label: 'Edit', icon: 'edit', placement: 'row', permission: this.permissionService.getPermission('cards_edit') },
+    { type: 'view', label: 'Delete', icon: 'visibility', placement: 'row', permission: this.permissionService.getPermission('cards_view') }
+  ];
+
+
   constructor() {
     this.loadCards();
-    this.canAdd.set(this.permissionService.hasPermission('cards', 'canAdd'));
-    this.canEdit.set(this.permissionService.hasPermission('cards', 'canEdit'));
-    this.canDelete.set(this.permissionService.hasPermission('cards', 'canDelete'));
-    this.canView.set(this.permissionService.hasPermission('cards', 'canView'));
   }
 
   loadCards(page: number = 1): void {
@@ -55,19 +56,25 @@ export class CardListComponent {
     this.loadCards(pageChange.page);
   }
 
-  addCard(): void {
-    this.router.navigate(['/cards/add']);
-  }
+  onTableAction(e: { type: string, row?: Card }) {
+    switch (e.type) {
+      case 'add':
+        this.router.navigate(['/cards/add']);
+        break;
+      case 'transfer':
+        if (!(e.row)) break;
+        this.router.navigate(['/cards/transfer', e.row.id]);
+        break;
+      case 'assign':
+        if (!(e.row)) break;
+        this.router.navigate(['/cards/assign', e.row.id]);
+        break;
 
-  transferCards(): void {
-    this.router.navigate(['/cards/transfer']);
-  }
-
-  assignCard(card: Card): void {
-    this.router.navigate(['/cards/assign', card.id]);
-  }
-
-  viewCard(card: Card): void {
-    this.router.navigate(['/cards/view', card.id]);
+      case 'view':
+        if (!(e.row)) break;
+        this.router.navigate(['/cards/view', e.row.id]);
+        break;
+        
+    }
   }
 }

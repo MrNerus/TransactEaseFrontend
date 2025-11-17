@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, input, output, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, signal, computed, Output, EventEmitter } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Permission } from '../users/user.interface';
 
 export interface ColumnDef {
   key: string;
@@ -33,22 +34,19 @@ export interface SearchChange {
   imports: [CommonModule, FormsModule, DatePipe]
 })
 export class DataTableComponent {
+  Permission = Permission;
   data = input<any[]>([]);
   controls = input<Controls>({ columns: [], searchableFields: [] });
   totalItems = input(0);
   pageSize = input(20);
   pageSizeOptions = input([5, 10, 20, 50]);
-  canAdd = input(false);
-  canEdit = input(false);
-  canDelete = input(false);
-  canView = input(false);
+  actions = input<TableAction[]>([]);
+  @Output() action = new EventEmitter<{ type: string, row?: any }>();
+
+
 
   searchChange = output<SearchChange>();
   pageChange = output<PageChange>();
-  add = output<void>();
-  edit = output<any>();
-  view = output<any>();
-  delete = output<any>();
 
   currentPage = signal(1);
   pageInput = signal(1);
@@ -117,4 +115,13 @@ export class DataTableComponent {
   private emitPageChange(): void {
     this.pageChange.emit({ page: this.currentPage(), pageSize: this.pageSize() });
   }
+
+}
+
+export interface TableAction {
+  type: string;            // 'add' | 'view' | 'edit' | 'delete' | ...
+  label: string;           // Button text (if needed)
+  icon: string;            // material icon
+  placement: 'global' | 'row';
+  permission: Permission;
 }

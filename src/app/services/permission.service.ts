@@ -7,25 +7,17 @@ import { Permission, User } from '../users/user.interface';
 export class PermissionService {
   private authService = inject(AuthService);
 
-  hasPermission(feature: string, action: keyof Permission): boolean {
+  getPermission(permission: string): Permission {
     const user: User | undefined = this.authService.getUser();
-    if (!user) return false;
+    if (!user) return Permission.blocked;
 
-    // 1. Check for user-specific permission override
-    if (user.permissions && user.permissions[feature] && user.permissions[feature][action] !== undefined) {
-      return user.permissions[feature][action]!;
+    if (user.permissions && user.permissions[permission] && user.permissions[permission] !== undefined) {
+      return user.permissions[permission];
     }
 
-    // 2. Get permissions from role
-    const role = ROLES.find(r => r.name === user.role.name);
-    if (!role) return false;
+    const role = ROLES.find(r => r.name === user.role);
+    if (!role) return Permission.blocked;
 
-    const rolePermission = role.permissions[feature] ? role.permissions[feature][action] : undefined;
-    if (rolePermission !== undefined) {
-      return rolePermission!;
-    }
-
-    // 3. Default to false if no permission is defined
-    return false;
+    return role.permissions[permission] ? role.permissions[permission] : Permission.blocked;
   }
 }

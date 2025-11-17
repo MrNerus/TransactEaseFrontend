@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { UserService } from '../user.service';
 import { User } from '../user.interface';
 import { Router } from '@angular/router';
-import { DataTableComponent, Controls, PageChange, SearchChange } from '../../data-table/data-table';
+import { DataTableComponent, Controls, PageChange, SearchChange, TableAction } from '../../data-table/data-table';
 import { PermissionService } from '../../services/permission.service';
 
 @Component({
@@ -23,30 +23,27 @@ export class UserListComponent {
   pageSize = signal(20);
   searchTerm = signal('');
   searchField = signal<keyof User | 'all'>('all');
-  canAdd = signal(false);
-  canEdit = signal(false);
-  canDelete = signal(false);
-  canView = signal(false);
-
   controls: Controls = {
     columns: [
       { key: 'id', label: 'ID' },
       { key: 'fullName', label: 'Full Name' },
       { key: 'email', label: 'Email' },
       { key: 'organizationId', label: 'Organization ID' },
-      { key: 'role', label: 'Role' },
       { key: 'isActive', label: 'Active', isBoolean: true },
       { key: 'createdAt', label: 'Created At', isDate: true },
     ],
     searchableFields: ['fullName', 'email', 'organizationId', 'role']
   };
 
+  actions: TableAction[] = [
+    { type: 'add', label: 'Add', icon: 'add', placement: 'global', permission: this.permissionService.getPermission('user_add') },
+    { type: 'view', label: 'View', icon: 'visibility', placement: 'row', permission: this.permissionService.getPermission('user_view') },
+    { type: 'edit', label: 'Edit', icon: 'edit', placement: 'row', permission: this.permissionService.getPermission('user_edit') },
+    { type: 'delete', label: 'Delete', icon: 'delete', placement: 'row', permission: this.permissionService.getPermission('user_delete') }
+  ];
+
   constructor() {
     this.loadUsers();
-    this.canAdd.set(this.permissionService.hasPermission('users', 'canAdd'));
-    this.canEdit.set(this.permissionService.hasPermission('users', 'canEdit'));
-    this.canDelete.set(this.permissionService.hasPermission('users', 'canDelete'));
-    this.canView.set(this.permissionService.hasPermission('users', 'canView'));
   }
 
   loadUsers(): void {
@@ -77,22 +74,32 @@ export class UserListComponent {
     this.totalItems.set(result.totalItems);
   }
 
-  addUser(): void {
-    this.router.navigate(['/users/add']);
-  }
-
-  editUser(user: User): void {
-    this.router.navigate(['/users/edit', user.id]);
-  }
-
-  viewUser(user: User): void {
-    this.router.navigate(['/users/view', user.id]);
-  }
-
   deleteUser(id: string): void {
     if (confirm(`Are you sure you want to delete user ${id}?`)) {
       this.userService.deleteUser(id);
       this.loadUsers();
+    }
+  }
+  onTableAction(e: { type: string, row?: User }) {
+    switch (e.type) {
+      case 'add':
+        this.router.navigate(['/users/add']);
+        break;
+
+      case 'view':
+        if (!(e.row)) break;
+        this.router.navigate(['/users/view', e.row.id]);
+        break;
+        
+      case 'edit':
+        if (!(e.row)) break;
+        this.router.navigate(['/users/edit', e.row.id]);
+        break;
+        
+      case 'delete':
+        if (!(e.row)) break;
+        this.deleteUser(e.row.id);
+        break;
     }
   }
 }

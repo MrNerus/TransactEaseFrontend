@@ -13,11 +13,11 @@
   background-color: var(--background-dark);
   padding: 1rem;
   color: var(--text-light);
-  width: 220px;
+  /* width: 220px; */
   height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
+  /* position: fixed; */
+  /* top: 0;
+  left: 0; */
   box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
   overflow-y: auto; /* Allow vertical scrolling for the entire navbar if content exceeds height */
   overflow-x: hidden; /* Ensure no horizontal scrollbar on the main navbar */

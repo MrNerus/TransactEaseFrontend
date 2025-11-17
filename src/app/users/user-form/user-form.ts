@@ -24,7 +24,7 @@ export class UserFormComponent {
     fullName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     organizationId: ['', Validators.required],
-    role: [null as Role | null, Validators.required],
+    role: ['', Validators.required],
     isActive: [true, Validators.required]
   });
 
@@ -41,7 +41,6 @@ export class UserFormComponent {
       if (user) {
         this.form.patchValue({
           ...user,
-          role: user.role
         });
       }
     }
@@ -76,9 +75,5 @@ export class UserFormComponent {
   onCancel() {
     this.form.reset();
     this.router.navigate(['/users']);
-  }
-
-  compareRoles(r1: Role, r2: Role): boolean {
-    return r1 && r2 ? r1.name === r2.name : r1 === r2;
   }
 }

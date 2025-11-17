@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavComponent } from './nav/nav';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, NavComponent],
-  template: '<app-nav></app-nav><router-outlet></router-outlet>'
+  templateUrl: './app.html',
+  styleUrls: ['./app.css'],
 })
-export class App {}
+export class App {
+  public authService = inject(AuthService);
+}

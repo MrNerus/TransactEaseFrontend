@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { StaffService } from '../staff.service';
 import { Staff } from '../staff.interface';
 import { Router } from '@angular/router';
-import { DataTableComponent, Controls, PageChange, SearchChange } from '../../data-table/data-table';
+import { DataTableComponent, Controls, PageChange, SearchChange, TableAction } from '../../data-table/data-table';
 import { PermissionService } from '../../services/permission.service';
 
 @Component({
@@ -23,10 +23,7 @@ export class StaffListComponent {
   pageSize = signal(20);
   searchTerm = signal('');
   searchField = signal<keyof Staff | 'all'>('all');
-  canAdd = signal(false);
-  canEdit = signal(false);
-  canDelete = signal(false);
-  canView = signal(false);
+
 
   controls: Controls = {
     columns: [
@@ -41,12 +38,15 @@ export class StaffListComponent {
     searchableFields: ['fullName', 'email', 'organizationId', 'role']
   };
 
+    actions: TableAction[] = [
+    { type: 'add', label: 'Add', icon: 'add', placement: 'global', permission: this.permissionService.getPermission('staff_add') },
+    { type: 'view', label: 'View', icon: 'visibility', placement: 'row', permission: this.permissionService.getPermission('staff_view') },
+    { type: 'edit', label: 'Edit', icon: 'edit', placement: 'row', permission: this.permissionService.getPermission('staff_edit') },
+    { type: 'delete', label: 'Delete', icon: 'delete', placement: 'row', permission: this.permissionService.getPermission('staff_delete') }
+  ];
+
   constructor() {
     this.loadStaffs();
-    this.canAdd.set(this.permissionService.hasPermission('staffs', 'canAdd'));
-    this.canEdit.set(this.permissionService.hasPermission('staffs', 'canEdit'));
-    this.canDelete.set(this.permissionService.hasPermission('staffs', 'canDelete'));
-    this.canView.set(this.permissionService.hasPermission('staffs', 'canView'));
   }
 
   loadStaffs(): void {
@@ -93,6 +93,29 @@ export class StaffListComponent {
     if (confirm(`Are you sure you want to delete staff ${id}?`)) {
       this.staffService.deleteStaff(id);
       this.loadStaffs();
+    }
+  }
+
+    onTableAction(e: { type: string, row?: Staff }) {
+    switch (e.type) {
+      case 'add':
+        this.router.navigate(['/staffs/add']);
+        break;
+
+      case 'view':
+        if (!(e.row)) break;
+        this.router.navigate(['/staffs/view', e.row.id]);
+        break;
+        
+      case 'edit':
+        if (!(e.row)) break;
+        this.router.navigate(['/staffs/edit', e.row.id]);
+        break;
+        
+      case 'delete':
+        if (!(e.row)) break;
+        this.deleteStaff(e.row.id);
+        break;
     }
   }
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { OrganizationService } from '../organization.service';
 import { Organization } from '../organization.interface';
 import { Router } from '@angular/router';
-import { DataTableComponent, Controls, PageChange, SearchChange } from '../../data-table/data-table';
+import { DataTableComponent, Controls, PageChange, SearchChange, TableAction } from '../../data-table/data-table';
 import { PermissionService } from '../../services/permission.service';
 
 @Component({
@@ -23,10 +23,6 @@ export class OrganizationListComponent {
   pageSize = signal(20);
   searchTerm = signal('');
   searchField = signal<keyof Organization | 'all'>('all');
-  canAdd = signal(false);
-  canEdit = signal(false);
-  canDelete = signal(false);
-  canView = signal(false);
 
   controls: Controls = {
     columns: [
@@ -38,12 +34,15 @@ export class OrganizationListComponent {
     searchableFields: ['id', 'name', 'parentId']
   };
 
+  actions: TableAction[] = [
+    { type: 'add', label: 'Add', icon: 'add', placement: 'global', permission: this.permissionService.getPermission('organization_add') },
+    { type: 'view', label: 'View', icon: 'visibility', placement: 'row', permission: this.permissionService.getPermission('organization_view') },
+    { type: 'edit', label: 'Edit', icon: 'edit', placement: 'row', permission: this.permissionService.getPermission('organization_edit') },
+    { type: 'delete', label: 'Delete', icon: 'delete', placement: 'row', permission: this.permissionService.getPermission('organization_delete') }
+  ];
+
   constructor() {
     this.loadOrganizations();
-    this.canAdd.set(this.permissionService.hasPermission('organizations', 'canAdd'));
-    this.canEdit.set(this.permissionService.hasPermission('organizations', 'canEdit'));
-    this.canDelete.set(this.permissionService.hasPermission('organizations', 'canDelete'));
-    this.canView.set(this.permissionService.hasPermission('organizations', 'canView'));
   }
 
   loadOrganizations(): void {
@@ -74,22 +73,33 @@ export class OrganizationListComponent {
     this.totalItems.set(result.totalItems);
   }
 
-  addOrganization(): void {
-    this.router.navigate(['/organizations/add']);
-  }
-
-  editOrganization(org: Organization): void {
-    this.router.navigate(['/organizations/edit', org.id]);
-  }
-
-  viewOrganization(org: Organization): void {
-    this.router.navigate(['/organizations/view', org.id]);
-  }
-
   deleteOrganization(id: string): void {
     if (confirm(`Are you sure you want to delete organization ${id}?`)) {
       this.organizationService.deleteOrganization(id);
       this.loadOrganizations();
+    }
+  }
+
+    onTableAction(e: { type: string, row?: Organization }) {
+    switch (e.type) {
+      case 'add':
+        this.router.navigate(['/organizations/add']);
+        break;
+
+      case 'view':
+        if (!(e.row)) break;
+        this.router.navigate(['/organizations/view', e.row.id]);
+        break;
+        
+      case 'edit':
+        if (!(e.row)) break;
+        this.router.navigate(['/organizations/edit', e.row.id]);
+        break;
+        
+      case 'delete':
+        if (!(e.row)) break;
+        this.deleteOrganization(e.row.id);
+        break;
     }
   }
 }

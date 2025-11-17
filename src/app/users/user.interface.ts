@@ -1,14 +1,13 @@
-export interface Permission {
-  canAdd: boolean;
-  canEdit: boolean;
-  canView: boolean;
-  canDelete: boolean;
+export enum Permission {
+  blocked = 0,
+  viewOnly = 1,
+  allowInteraction = 2
 }
 
 export interface Role {
   name: string;
   permissions: {
-    [key: string]: Partial<Permission>;
+    [key: string]: Permission;
   };
 }
 
@@ -17,10 +16,10 @@ export interface User {
   fullName: string;
   email: string;
   organizationId: string;
-  role: Role;
   isActive: boolean;
+  role: string;
   createdAt: string;
   permissions?: {
-    [key: string]: Partial<Permission>;
+    [key: string]: Permission;
   };
 }

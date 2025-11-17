@@ -33,7 +33,7 @@ export class CardTransferComponent {
 
   constructor() {
     this.loadInitialData();
-    this.isAdmin.set(this.authService.getUser()?.role?.name === 'admin');
+    this.isAdmin.set(this.authService.getUser()?.role === 'admin');
   }
 
   loadInitialData(): void {

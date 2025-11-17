@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { PermissionService } from '../services/permission.service';
+import { Permission } from '../users/user.interface';
 
 export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state) => {
   const authService = inject(AuthService);
@@ -9,8 +10,9 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state) =
   const router = inject(Router);
 
   if (authService.isAuthenticated()) {
-    const { feature, action } = route.data?.['permission'] || {};
-    if (feature && action && !permissionService.hasPermission(feature, action)) {
+    let permissionKey: string = route.data?.['permission'] || {};
+    let permissionValue: Permission = permissionService.getPermission(permissionKey);
+    if (permissionValue != Permission.allowInteraction) {
       router.navigate(['/dashboard']); // Or a dedicated 'unauthorized' page
       return false;
     }

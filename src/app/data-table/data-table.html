@@ -7,8 +7,13 @@
         <option [value]="field">{{ field | titlecase }}</option>
       }
     </select>
-    @if (canAdd()) {
-      <button (click)="add.emit()" title="Add New"><span class="material-icons">add</span></button>
+    @for (a of actions(); track a.type) {
+      @if (a.placement === 'global' && (a.permission == Permission.allowInteraction || a.permission == Permission.viewOnly)) {
+        <button (click)="action.emit({ type: a.type, row: null })" [disabled]="a.permission == Permission.viewOnly">
+          <span class="material-icons">{{ a.icon }}</span>
+          {{ a.label }}
+        </button>
+      }
     }
   </div>
 
@@ -38,14 +43,12 @@
             </td>
           }
           <td>
-            @if (canView()) {
-              <button (click)="view.emit(row)" title="View"><span class="material-icons">visibility</span></button>
-            }
-            @if (canEdit()) {
-              <button (click)="edit.emit(row)" title="Edit"><span class="material-icons">edit</span></button>
-            }
-            @if (canDelete()) {
-              <button (click)="delete.emit(row.id)" title="Delete"><span class="material-icons">delete</span></button>
+            @for (a of actions(); track a.type) {
+              @if (a.placement === 'row' && (a.permission == Permission.allowInteraction || a.permission == Permission.viewOnly)) {
+                <button (click)="action.emit({ type: a.type, row })" title="{{ a.label }}" [disabled]="a.permission == Permission.viewOnly">
+                  <span class="material-icons">{{ a.icon }}</span>
+                </button>
+              }
             }
           </td>
         </tr>

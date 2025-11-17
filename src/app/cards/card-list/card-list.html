@@ -4,17 +4,7 @@
   [totalItems]="totalItems()"
   [pageSize]="pageSize()"
   (pageChange)="onPageChange($event)"
-  (add)="addCard()"
-  (edit)="assignCard($event)"
-  (view)="viewCard($event)"
-  [canAdd]="canAdd()"
-  [canEdit]="canEdit()"
-  [canDelete]="canDelete()"
-  [canView]="canView()"
+    [actions]="actions"
+  (action)="onTableAction($event)"
 >
-  <ng-container>
-    @if (canEdit()) {
-      <button (click)="transferCards()">Transfer Cards</button>
-    }
-  </ng-container>
 </app-data-table>

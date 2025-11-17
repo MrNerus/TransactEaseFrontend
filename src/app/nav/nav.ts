@@ -29,11 +29,6 @@ export class NavComponent {
     { label: 'Cards', icon: 'credit_card', route: '/cards' },
     { label: 'Reports', icon: 'bar_chart', route: '/reports' },
     { label: 'Audit Logs', icon: 'receipt_long', route: '/audit-logs' },
-    { label: 'Documents', icon: 'folder', isDropdown: true, children: [
-      { label: 'View Documents', icon: 'search', route: '/documents' },
-      { label: 'Upload Document', icon: 'upload', route: '/documents/upload' }
-    ]},
-    { label: 'Accounts', icon: 'account_balance_wallet', route: '/accounts' },
     { label: 'Profile', icon: 'person', route: '/profile' }
   ]);
 

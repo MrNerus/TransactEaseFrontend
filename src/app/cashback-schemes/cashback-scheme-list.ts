@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { DataTableComponent, ColumnDef, PageChange, SearchChange } from '../data-table/data-table';
+import { DataTableComponent, ColumnDef, PageChange, SearchChange, TableAction } from '../data-table/data-table';
 import { CashbackSchemeService } from './cashback-scheme.service';
 import { PermissionService } from '../services/permission.service';
 
@@ -31,10 +31,6 @@ export class CashbackSchemeListComponent {
   pageSize = signal(10);
   searchTerm = signal('');
   searchField = signal<keyof CashbackScheme | 'all'>('all');
-  canAdd = signal(false);
-  canEdit = signal(false);
-  canDelete = signal(false);
-  canView = signal(false);
 
   columns: ColumnDef[] = [
     { key: 'id', label: 'ID' },
@@ -43,12 +39,15 @@ export class CashbackSchemeListComponent {
     { key: 'isActive', label: 'Active', isBoolean: true },
   ];
 
+  actions: TableAction[] = [
+    { type: 'add', label: 'Add', icon: 'add', placement: 'global', permission: this.permissionService.getPermission('cashbackScheme_add') },
+    { type: 'view', label: 'View', icon: 'visibility', placement: 'row', permission: this.permissionService.getPermission('cashbackScheme_view') },
+    { type: 'edit', label: 'Edit', icon: 'edit', placement: 'row', permission: this.permissionService.getPermission('cashbackScheme_edit') },
+    { type: 'delete', label: 'Delete', icon: 'delete', placement: 'row', permission: this.permissionService.getPermission('cashbackScheme_delete') }
+  ];
+
   constructor() {
     this.loadCashbackSchemes();
-    this.canAdd.set(this.permissionService.hasPermission('cashback-schemes', 'canAdd'));
-    this.canEdit.set(this.permissionService.hasPermission('cashback-schemes', 'canEdit'));
-    this.canDelete.set(this.permissionService.hasPermission('cashback-schemes', 'canDelete'));
-    this.canView.set(this.permissionService.hasPermission('cashback-schemes', 'canView'));
   }
 
   loadCashbackSchemes(): void {
@@ -80,22 +79,33 @@ export class CashbackSchemeListComponent {
     this.totalItems.set(result.totalItems);
   }
 
-  addCashbackScheme(): void {
-    this.router.navigate(['/cashback-schemes/add']);
-  }
-
-  editCashbackScheme(scheme: CashbackScheme): void {
-    this.router.navigate(['/cashback-schemes/edit', scheme.id]);
-  }
-
-  viewCashbackScheme(scheme: CashbackScheme): void {
-    this.router.navigate(['/cashback-schemes/view', scheme.id]);
-  }
-
   deleteCashbackScheme(id: string): void {
     if (confirm(`Are you sure you want to delete scheme ${id}?`)) {
       this.cashbackSchemeService.deleteCashbackScheme(id);
       this.loadCashbackSchemes();
+    }
+  }
+
+  onTableAction(e: { type: string, row?: CashbackScheme }) {
+    switch (e.type) {
+      case 'add':
+        this.router.navigate(['/cashback-schemes/add']);
+        break;
+
+      case 'view':
+        if (!(e.row)) break;
+        this.router.navigate(['/cashback-schemes/view', e.row.id]);
+        break;
+        
+      case 'edit':
+        if (!(e.row)) break;
+        this.router.navigate(['/cashback-schemes/edit', e.row.id]);
+        break;
+        
+      case 'delete':
+        if (!(e.row)) break;
+        this.deleteCashbackScheme(e.row.id);
+        break;
     }
   }
 }
