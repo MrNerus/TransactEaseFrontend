@@ -1,0 +1,25 @@
+$sourcePath = "D:\Angular\TransactEaseFrontend"
+$deployPath = "D:\Angular\TransactEaseDeploy"
+$distPath   = "$sourcePath\dist\myapp\browser"
+$commitMsg = Read-Host "Enter commit message"
+
+Set-Location $sourcePath
+git add .
+git commit -m "$commitMsg"
+git push
+
+ng build --configuration production
+
+Set-Location $deployPath
+Get-ChildItem -Path $deployPath -Recurse | Where-Object {
+    $_.Name -notin @(".git", ".gitignore", ".nojekyll", "CNAME")
+} | Remove-Item -Recurse -Force
+
+Copy-Item -Path "$distPath\*" -Destination $deployPath -Recurse
+
+Copy-Item "$deployPath\index.html" "$deployPath\404.html" -Force
+
+
+Set-Location $sourcePath
+
+Write-Host "✅ Deployment complete!"
