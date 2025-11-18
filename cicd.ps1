@@ -8,7 +8,7 @@ git add .
 git commit -m "$commitMsg"
 git push
 
-ng build --configuration production
+ng build --configuration production --base-href=/
 
 Set-Location $deployPath
 Get-ChildItem -Path $deployPath -Recurse | Where-Object {
