@@ -1,31 +1,5 @@
 <div class="form-container">
-  <h1>{{ isViewMode() ? 'View Staff' : (isEditMode() ? 'Edit Staff' : 'Add Staff') }}</h1>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="fullName">Full Name</label>
-      <input type="text" id="fullName" formControlName="fullName">
-    </div>
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input type="email" id="email" formControlName="email">
-    </div>
-    <div class="form-group">
-      <label for="organizationId">Organization ID</label>
-      <input type="text" id="organizationId" formControlName="organizationId">
-    </div>
-    <div class="form-group">
-      <label for="role">Role</label>
-      <input type="text" id="role" formControlName="role">
-    </div>
-    <div class="form-group">
-      <label for="isActive">Active</label>
-      <input type="checkbox" id="isActive" formControlName="isActive">
-    </div>
-    <div class="form-actions">
-      @if (!isViewMode()) {
-        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">{{ isEditMode() ? 'Save' : 'Add' }}</button>
-      }
-      <button type="button" class="btn btn-secondary" (click)="onCancel()">{{ isViewMode() ? 'Back' : 'Cancel' }}</button> 
-    </div>
-  </form>
+  <h2>{{ isViewMode() ? 'View' : (data().id ? 'Edit' : 'Add') }} Staff</h2>
+  <app-dynamic-form [schema]="schema()" [data]="data()" [viewOnly]="isViewMode()" (save)="onSave($event)"
+    (cancel)="onCancel()"></app-dynamic-form>
 </div>

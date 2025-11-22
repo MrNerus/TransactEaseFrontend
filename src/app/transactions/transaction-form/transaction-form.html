@@ -1,0 +1,10 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Transaction Details</h2>
+  </div>
+
+  <div class="page-content">
+    <app-dynamic-form [schema]="schema()" [data]="data()" [permission]="permission()" [viewOnly]="isViewMode()"
+      (save)="onSave($event)" (cancel)="onCancel()"></app-dynamic-form>
+  </div>
+</div>

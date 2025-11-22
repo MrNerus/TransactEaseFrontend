@@ -5,6 +5,7 @@ import { User } from '../user.interface';
 import { Router } from '@angular/router';
 import { DataTableComponent, Controls, PageChange, SearchChange, TableAction } from '../../data-table/data-table';
 import { PermissionService } from '../../services/permission.service';
+import { SchemaService } from '../../services/schema.service';
 
 @Component({
   selector: 'app-user-list',
@@ -17,23 +18,14 @@ export class UserListComponent {
   private userService = inject(UserService);
   private router = inject(Router);
   private permissionService = inject(PermissionService);
+  private schemaService = inject(SchemaService);
 
   users = signal<User[]>([]);
+  controls = signal<Controls>({ columns: [], searchableFields: [] });
   totalItems = signal(0);
   pageSize = signal(20);
   searchTerm = signal('');
   searchField = signal<keyof User | 'all'>('all');
-  controls: Controls = {
-    columns: [
-      { key: 'id', label: 'ID' },
-      { key: 'fullName', label: 'Full Name' },
-      { key: 'email', label: 'Email' },
-      { key: 'organizationId', label: 'Organization ID' },
-      { key: 'isActive', label: 'Active', isBoolean: true },
-      { key: 'createdAt', label: 'Created At', isDate: true },
-    ],
-    searchableFields: ['fullName', 'email', 'organizationId', 'role']
-  };
 
   actions: TableAction[] = [
     { type: 'add', label: 'Add', icon: 'add', placement: 'global', permission: this.permissionService.getPermission('user_add') },
@@ -43,6 +35,9 @@ export class UserListComponent {
   ];
 
   constructor() {
+    this.schemaService.getTableSchema('users').subscribe(schema => {
+      this.controls.set(schema);
+    });
     this.loadUsers();
   }
 
@@ -90,12 +85,12 @@ export class UserListComponent {
         if (!(e.row)) break;
         this.router.navigate(['/users/view', e.row.id]);
         break;
-        
+
       case 'edit':
         if (!(e.row)) break;
         this.router.navigate(['/users/edit', e.row.id]);
         break;
-        
+
       case 'delete':
         if (!(e.row)) break;
         this.deleteUser(e.row.id);

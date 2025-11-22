@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { DataTableComponent, ColumnDef, PageChange, SearchChange, TableAction } from '../data-table/data-table';
+import { DataTableComponent, PageChange, SearchChange, TableAction, Controls } from '../data-table/data-table';
 import { CashbackSchemeService } from './cashback-scheme.service';
 import { PermissionService } from '../services/permission.service';
+import { SchemaService } from '../services/schema.service';
 
 interface CashbackScheme {
   id: string;
@@ -24,20 +24,15 @@ export class CashbackSchemeListComponent {
   private router = inject(Router);
   private cashbackSchemeService = inject(CashbackSchemeService);
   private permissionService = inject(PermissionService);
+  private schemaService = inject(SchemaService);
 
   cashbackSchemes = signal<CashbackScheme[]>([]);
+  controls = signal<Controls>({ columns: [], searchableFields: [] });
 
   totalItems = signal(0);
   pageSize = signal(10);
   searchTerm = signal('');
   searchField = signal<keyof CashbackScheme | 'all'>('all');
-
-  columns: ColumnDef[] = [
-    { key: 'id', label: 'ID' },
-    { key: 'name', label: 'Name' },
-    { key: 'description', label: 'Description' },
-    { key: 'isActive', label: 'Active', isBoolean: true },
-  ];
 
   actions: TableAction[] = [
     { type: 'add', label: 'Add', icon: 'add', placement: 'global', permission: this.permissionService.getPermission('cashbackScheme_add') },
@@ -47,6 +42,9 @@ export class CashbackSchemeListComponent {
   ];
 
   constructor() {
+    this.schemaService.getTableSchema('cashback-schemes').subscribe(schema => {
+      this.controls.set(schema);
+    });
     this.loadCashbackSchemes();
   }
 
@@ -96,12 +94,12 @@ export class CashbackSchemeListComponent {
         if (!(e.row)) break;
         this.router.navigate(['/cashback-schemes/view', e.row.id]);
         break;
-        
+
       case 'edit':
         if (!(e.row)) break;
         this.router.navigate(['/cashback-schemes/edit', e.row.id]);
         break;
-        
+
       case 'delete':
         if (!(e.row)) break;
         this.deleteCashbackScheme(e.row.id);

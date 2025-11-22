@@ -1,66 +1,57 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StaffService } from '../staff.service';
-import { CommonModule } from '@angular/common';
+import { DynamicFormComponent } from '../../dynamic-form/dynamic-form.component';
+import { SchemaService, FormSchema } from '../../services/schema.service';
 
 @Component({
   selector: 'app-staff-form',
   templateUrl: './staff-form.html',
   styleUrls: ['./staff-form.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [DynamicFormComponent]
 })
 export class StaffFormComponent {
-  private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private staffService = inject(StaffService);
+  private schemaService = inject(SchemaService);
 
-  form = this.fb.group({
-    id: [null as string | null],
-    fullName: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    organizationId: ['', Validators.required],
-    role: ['', Validators.required],
-    isActive: [true, Validators.required]
-  });
-
-  isEditMode = signal(false);
+  schema = signal<FormSchema>({ fields: [] });
+  data = signal<any>({});
   isViewMode = signal(false);
 
   constructor() {
+    this.schemaService.getFormSchema('staffs').subscribe(schema => {
+      this.schema.set(schema);
+    });
+
     const id = this.route.snapshot.paramMap.get('id');
     const url = this.router.url;
 
     if (id) {
       const staff = this.staffService.getStaffById(id);
       if (staff) {
-        this.form.patchValue(staff);
+        this.data.set(staff);
       }
     }
 
     if (url.includes('view')) {
       this.isViewMode.set(true);
-      this.form.disable();
-    } else if (url.includes('edit')) {
-      this.isEditMode.set(true);
     }
   }
 
-  onSubmit() {
-    if (this.form.valid) {
-      if (this.isEditMode()) {
-        this.staffService.updateStaff(this.form.value as any);
-      } else {
-        this.staffService.addStaff(this.form.value as any);
-      }
-      this.router.navigate(['/staffs']);
+  onSave(formData: any) {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.staffService.updateStaff({ ...formData, id });
+    } else {
+      this.staffService.addStaff(formData);
     }
+    this.router.navigate(['/staffs']);
   }
 
   onCancel() {
-    this.form.reset();
     this.router.navigate(['/staffs']);
   }
 }

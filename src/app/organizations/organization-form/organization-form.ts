@@ -1,63 +1,57 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationService } from '../organization.service';
-import { CommonModule } from '@angular/common';
+import { DynamicFormComponent } from '../../dynamic-form/dynamic-form.component';
+import { SchemaService, FormSchema } from '../../services/schema.service';
 
 @Component({
   selector: 'app-organization-form',
   templateUrl: './organization-form.html',
   styleUrls: ['./organization-form.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [DynamicFormComponent]
 })
 export class OrganizationFormComponent {
-  private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private organizationService = inject(OrganizationService);
+  private schemaService = inject(SchemaService);
 
-  form = this.fb.group({
-    id: [null as string | null],
-    name: ['', Validators.required],
-    parentId: [null as string | null]
-  });
-
-  isEditMode = signal(false);
+  schema = signal<FormSchema>({ fields: [] });
+  data = signal<any>({});
   isViewMode = signal(false);
 
   constructor() {
+    this.schemaService.getFormSchema('organizations').subscribe(schema => {
+      this.schema.set(schema);
+    });
+
     const id = this.route.snapshot.paramMap.get('id');
     const url = this.router.url;
 
     if (id) {
       const organization = this.organizationService.getOrganizationById(id);
       if (organization) {
-        this.form.patchValue(organization);
+        this.data.set(organization);
       }
     }
 
     if (url.includes('view')) {
       this.isViewMode.set(true);
-      this.form.disable();
-    } else if (url.includes('edit')) {
-      this.isEditMode.set(true);
     }
   }
 
-  onSubmit() {
-    if (this.form.valid) {
-      if (this.isEditMode()) {
-        this.organizationService.updateOrganization(this.form.value as any);
-      } else {
-        this.organizationService.addOrganization(this.form.value as any);
-      }
-      this.router.navigate(['/organizations']);
+  onSave(formData: any) {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.organizationService.updateOrganization({ ...formData, id });
+    } else {
+      this.organizationService.addOrganization(formData);
     }
+    this.router.navigate(['/organizations']);
   }
 
   onCancel() {
-    this.form.reset();
     this.router.navigate(['/organizations']);
   }
 }

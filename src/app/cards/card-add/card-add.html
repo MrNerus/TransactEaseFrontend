@@ -1,37 +1,4 @@
-<div class="form-container">
-  <h1>Add Cards</h1>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div formArrayName="cards">
-      <table>
-        <thead>
-          <tr>
-            <th>Card Number</th>
-            <th>Card Type</th>
-            <th>Issue Date</th>
-            <th>Expiry Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (card of cards.controls; track $index) {
- <tr [formGroupName]="$index">
-            <td><input id="cardNumber-{{$index}}" type="text" formControlName="cardNumber"></td>
-            <td><select id="cardType-{{$index}}" formControlName="cardType">
-              <option value="debit">Debit</option>
-              <option value="credit">Credit</option>
-            </select></td>
-            <td><input id="issueDate-{{$index}}" type="date" formControlName="issueDate"></td>
-            <td><input id="expiryDate-{{$index}}" type="date" formControlName="expiryDate"></td>
-            <td><button type="button" class="btn btn-danger" (click)="removeCard($index)" aria-label="Remove Card"><span class="material-icons">delete</span></button></td>
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-    <div class="form-actions">
-      <button type="button" class="btn btn-secondary" (click)="addCard()" aria-label="Add Another Card"><span class="material-icons">add</span> Add Another Card</button>
-      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Submit</button>
-      <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
-    </div>
-  </form>
+<div class="card-add-container">
+  <h2>Add New Card</h2>
+  <app-dynamic-form [schema]="schema()" (save)="onSave($event)" (cancel)="onCancel()"></app-dynamic-form>
 </div>

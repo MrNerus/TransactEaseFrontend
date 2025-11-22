@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DataTableComponent, Controls, PageChange, SearchChange } from '../data-table/data-table';
+import { SchemaService } from '../services/schema.service';
 
 interface AuditLog {
   id: string;
@@ -14,9 +16,11 @@ interface AuditLog {
   templateUrl: './audit-logs.html',
   styleUrls: ['./audit-logs.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DatePipe]
+  imports: [CommonModule, DataTableComponent]
 })
 export class AuditLogsComponent {
+  private schemaService = inject(SchemaService);
+
   auditLogs = signal<AuditLog[]>([
     {
       id: 'log_1',
@@ -40,4 +44,22 @@ export class AuditLogsComponent {
       details: 'Document Name: invoice.pdf',
     },
   ]);
+
+  controls = signal<Controls>({ columns: [], searchableFields: [] });
+  totalItems = signal(3); // Mock total items
+  pageSize = signal(10);
+
+  constructor() {
+    this.schemaService.getTableSchema('audit-logs').subscribe(schema => {
+      this.controls.set(schema);
+    });
+  }
+
+  onPageChange(event: PageChange) {
+    // Handle page change
+  }
+
+  onSearchChange(event: SearchChange) {
+    // Handle search change
+  }
 }

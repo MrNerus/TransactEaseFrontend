@@ -13,7 +13,7 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state) =
     let permissionKey: string = route.data?.['permission'] || {};
     let permissionValue: Permission = permissionService.getPermission(permissionKey);
     if (permissionValue != Permission.allowInteraction) {
-      router.navigate(['/dashboard']); // Or a dedicated 'unauthorized' page
+      router.navigate(['/dashboard']);
       return false;
     }
     return true;

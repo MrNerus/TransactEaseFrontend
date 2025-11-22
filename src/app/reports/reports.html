@@ -4,27 +4,11 @@
   </div>
 
   <div class="filter-container">
-    <div class="form-group">
-      <label for="reportType">Report Type</label>
-      <select id="reportType">
-        <option value="">Select a report type</option>
-        @for (report of reports(); track report.id) {
-          <option [value]="report.id">{{ report.name }}</option>
-        }
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="startDate">Start Date</label>
-      <input type="date" id="startDate">
-    </div>
-    <div class="form-group">
-      <label for="endDate">End Date</label>
-      <input type="date" id="endDate">
-    </div>
-    <button class="generate-btn">Generate Report</button>
+    <app-dynamic-form [schema]="schema()" (save)="onGenerate($event)"></app-dynamic-form>
   </div>
 
   <div class="report-display">
     <!-- Report content will be displayed here -->
+    <p>Select criteria and click Save to generate report.</p>
   </div>
 </div>

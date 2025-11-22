@@ -5,6 +5,7 @@ import { Staff } from '../staff.interface';
 import { Router } from '@angular/router';
 import { DataTableComponent, Controls, PageChange, SearchChange, TableAction } from '../../data-table/data-table';
 import { PermissionService } from '../../services/permission.service';
+import { SchemaService } from '../../services/schema.service';
 
 @Component({
   selector: 'app-staff-list',
@@ -17,28 +18,16 @@ export class StaffListComponent {
   private staffService = inject(StaffService);
   private router = inject(Router);
   private permissionService = inject(PermissionService);
+  private schemaService = inject(SchemaService);
 
   staffs = signal<Staff[]>([]);
+  controls = signal<Controls>({ columns: [], searchableFields: [] });
   totalItems = signal(0);
   pageSize = signal(20);
   searchTerm = signal('');
   searchField = signal<keyof Staff | 'all'>('all');
 
-
-  controls: Controls = {
-    columns: [
-      { key: 'id', label: 'ID' },
-      { key: 'fullName', label: 'Full Name' },
-      { key: 'email', label: 'Email' },
-      { key: 'organizationId', label: 'Organization ID' },
-      { key: 'role', label: 'Role' },
-      { key: 'isActive', label: 'Active', isBoolean: true },
-      { key: 'createdAt', label: 'Created At', isDate: true },
-    ],
-    searchableFields: ['fullName', 'email', 'organizationId', 'role']
-  };
-
-    actions: TableAction[] = [
+  actions: TableAction[] = [
     { type: 'add', label: 'Add', icon: 'add', placement: 'global', permission: this.permissionService.getPermission('staff_add') },
     { type: 'view', label: 'View', icon: 'visibility', placement: 'row', permission: this.permissionService.getPermission('staff_view') },
     { type: 'edit', label: 'Edit', icon: 'edit', placement: 'row', permission: this.permissionService.getPermission('staff_edit') },
@@ -46,6 +35,9 @@ export class StaffListComponent {
   ];
 
   constructor() {
+    this.schemaService.getTableSchema('staffs').subscribe(schema => {
+      this.controls.set(schema);
+    });
     this.loadStaffs();
   }
 
@@ -77,18 +69,6 @@ export class StaffListComponent {
     this.totalItems.set(result.totalItems);
   }
 
-  addStaff(): void {
-    this.router.navigate(['/staffs/add']);
-  }
-
-  editStaff(staff: Staff): void {
-    this.router.navigate(['/staffs/edit', staff.id]);
-  }
-
-  viewStaff(staff: Staff): void {
-    this.router.navigate(['/staffs/view', staff.id]);
-  }
-
   deleteStaff(id: string): void {
     if (confirm(`Are you sure you want to delete staff ${id}?`)) {
       this.staffService.deleteStaff(id);
@@ -96,7 +76,7 @@ export class StaffListComponent {
     }
   }
 
-    onTableAction(e: { type: string, row?: Staff }) {
+  onTableAction(e: { type: string, row?: Staff }) {
     switch (e.type) {
       case 'add':
         this.router.navigate(['/staffs/add']);
@@ -106,12 +86,12 @@ export class StaffListComponent {
         if (!(e.row)) break;
         this.router.navigate(['/staffs/view', e.row.id]);
         break;
-        
+
       case 'edit':
         if (!(e.row)) break;
         this.router.navigate(['/staffs/edit', e.row.id]);
         break;
-        
+
       case 'delete':
         if (!(e.row)) break;
         this.deleteStaff(e.row.id);

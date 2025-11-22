@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login';
 import { DashboardComponent } from './dashboard/dashboard';
 import { authGuard } from './guards/auth.guard';
-import { TransactionsComponent } from './transactions/transactions';
+import { TransactionList } from './transactions/transaction-list/transaction-list';
 import { ProfileComponent } from './profile/profile';
 import { OrganizationListComponent } from './organizations/organization-list/organization-list';
 import { OrganizationFormComponent } from './organizations/organization-form/organization-form';
@@ -19,6 +19,7 @@ import { CardAddComponent } from './cards/card-add/card-add';
 import { CardTransferComponent } from './cards/card-transfer/card-transfer';
 import { CardAssignComponent } from './cards/card-assign/card-assign';
 import { CardViewComponent } from './cards/card-view/card-view';
+import { TransactionFormComponent } from './transactions/transaction-form/transaction-form';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -45,8 +46,9 @@ export const routes: Routes = [
   { path: 'cashback-schemes/edit/:id', component: CashbackSchemeFormComponent, canActivate: [authGuard], data: { permission: 'cashbackScheme_edit' } },
   { path: 'cashback-schemes/view/:id', component: CashbackSchemeFormComponent, canActivate: [authGuard], data: { permission: 'cashbackScheme_view' } },
 
-  { path: 'transactions', component: TransactionsComponent, canActivate: [authGuard], data: { permission: 'nav_transaction' } },
-  { path: 'transactions/view/:id', component: TransactionsComponent, canActivate: [authGuard], data: { permission: 'transaction_view' } },
+  { path: 'transactions', component: TransactionList, canActivate: [authGuard], data: { permission: 'nav_transaction' } },
+  { path: 'transactions/view/:id', component: TransactionFormComponent, canActivate: [authGuard], data: { permission: 'transaction_view' } },
+  { path: 'transactions/add', component: TransactionFormComponent, canActivate: [authGuard], data: { permission: 'transaction_add' } },
 
   { path: 'reports', component: ReportsComponent, canActivate: [authGuard], data: { permission: 'nav_reports' } },
 

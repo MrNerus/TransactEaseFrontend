@@ -1,0 +1,67 @@
+.form-container {
+  padding: 2rem;
+  background-color: var(--background-dark);
+  color: var(--text-light);
+}
+
+h2 {
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 10px rgba(0, 194, 255, 0.7);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-light);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-light);
+  color: var(--text-light);
+}
+
+.form-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.form-actions button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--primary-color);
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: background-color var(--animation-duration) var(--animation-easing);
+  display: flex; /* Enable flexbox for icon and text alignment */
+  align-items: center;
+  justify-content: center; /* Center content */
+}
+
+.form-actions button .material-icons {
+  font-size: 1.2rem;
+  margin-right: 0.5rem; /* Space between icon and text */
+  color: var(--text-dark);
+}
+
+.form-actions button:hover {
+  background-color: var(--hover-color);
+}
+
+.form-actions button[type="button"] {
+  background-color: var(--secondary-color);
+}
+
+.form-actions button[type="button"]:hover {
+  background-color: var(--hover-color);
+}

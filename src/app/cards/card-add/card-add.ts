@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormBuilder, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Card } from '../card.interface';
 import { CardService } from '../card.service';
+import { DynamicFormComponent } from '../../dynamic-form/dynamic-form.component';
+import { SchemaService, FormSchema } from '../../services/schema.service';
 
 @Component({
   selector: 'app-card-add',
@@ -10,41 +11,31 @@ import { CardService } from '../card.service';
   styleUrls: ['./card-add.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [ReactiveFormsModule]
+  imports: [DynamicFormComponent]
 })
 export class CardAddComponent {
-  private fb = inject(FormBuilder);
   private router = inject(Router);
   private cardService = inject(CardService);
+  private schemaService = inject(SchemaService);
 
-  form = this.fb.group({
-    cards: this.fb.array([])
-  });
+  schema = signal<FormSchema>({ fields: [] });
 
-  get cards(): FormArray {
-    return this.form.get('cards') as FormArray;
-  }
-
-  addCard(): void {
-    const cardForm = this.fb.group({
-      cardNumber: ['', Validators.required],
-      cardType: ['debit' as const, Validators.required],
-      status: ['inactive' as const, Validators.required],
-      issueDate: [new Date(), Validators.required],
-      expiryDate: [new Date(), Validators.required]
+  constructor() {
+    this.schemaService.getFormSchema('cards').subscribe(schema => {
+      this.schema.set(schema);
     });
-    this.cards.push(cardForm);
   }
 
-  removeCard(index: number): void {
-    this.cards.removeAt(index);
-  }
-
-  onSubmit(): void {
-    if (this.form.valid) {
-      this.cardService.addCards(this.form.value.cards as Omit<Card, 'id'>[]);
-      this.router.navigate(['/cards']);
-    }
+  onSave(formData: any): void {
+    // Adapt single form data to array as service expects array
+    // Or update service to accept single card. For now, wrap in array.
+    // Also need to handle types if form returns strings for dates etc.
+    const cardData = {
+      ...formData,
+      status: 'inactive' // Default status
+    };
+    this.cardService.addCards([cardData]);
+    this.router.navigate(['/cards']);
   }
 
   onCancel(): void {

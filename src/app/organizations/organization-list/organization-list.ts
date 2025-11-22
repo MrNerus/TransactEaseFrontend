@@ -5,6 +5,7 @@ import { Organization } from '../organization.interface';
 import { Router } from '@angular/router';
 import { DataTableComponent, Controls, PageChange, SearchChange, TableAction } from '../../data-table/data-table';
 import { PermissionService } from '../../services/permission.service';
+import { SchemaService } from '../../services/schema.service';
 
 @Component({
   selector: 'app-organization-list',
@@ -17,22 +18,14 @@ export class OrganizationListComponent {
   private organizationService = inject(OrganizationService);
   private router = inject(Router);
   private permissionService = inject(PermissionService);
+  private schemaService = inject(SchemaService);
 
   organizations = signal<Organization[]>([]);
+  controls = signal<Controls>({ columns: [], searchableFields: [] });
   totalItems = signal(0);
   pageSize = signal(20);
   searchTerm = signal('');
   searchField = signal<keyof Organization | 'all'>('all');
-
-  controls: Controls = {
-    columns: [
-      { key: 'id', label: 'ID' },
-      { key: 'name', label: 'Name' },
-      { key: 'parentId', label: 'Parent ID' },
-      { key: 'createdAt', label: 'Created At', isDate: true },
-    ],
-    searchableFields: ['id', 'name', 'parentId']
-  };
 
   actions: TableAction[] = [
     { type: 'add', label: 'Add', icon: 'add', placement: 'global', permission: this.permissionService.getPermission('organization_add') },
@@ -42,6 +35,9 @@ export class OrganizationListComponent {
   ];
 
   constructor() {
+    this.schemaService.getTableSchema('organizations').subscribe(schema => {
+      this.controls.set(schema);
+    });
     this.loadOrganizations();
   }
 
@@ -80,7 +76,7 @@ export class OrganizationListComponent {
     }
   }
 
-    onTableAction(e: { type: string, row?: Organization }) {
+  onTableAction(e: { type: string, row?: Organization }) {
     switch (e.type) {
       case 'add':
         this.router.navigate(['/organizations/add']);
@@ -90,12 +86,12 @@ export class OrganizationListComponent {
         if (!(e.row)) break;
         this.router.navigate(['/organizations/view', e.row.id]);
         break;
-        
+
       case 'edit':
         if (!(e.row)) break;
         this.router.navigate(['/organizations/edit', e.row.id]);
         break;
-        
+
       case 'delete':
         if (!(e.row)) break;
         this.deleteOrganization(e.row.id);

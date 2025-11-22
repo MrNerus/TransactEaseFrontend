@@ -1,79 +1,57 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
-import { CommonModule } from '@angular/common';
-import { ROLES } from '../../services/permission.config';
-import { Role } from '../user.interface';
+import { DynamicFormComponent } from '../../dynamic-form/dynamic-form.component';
+import { SchemaService, FormSchema } from '../../services/schema.service';
 
 @Component({
   selector: 'app-user-form',
   templateUrl: './user-form.html',
   styleUrls: ['./user-form.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [DynamicFormComponent]
 })
 export class UserFormComponent {
-  private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private userService = inject(UserService);
+  private schemaService = inject(SchemaService);
 
-  form = this.fb.group({
-    id: [null as string | null],
-    fullName: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    organizationId: ['', Validators.required],
-    role: ['', Validators.required],
-    isActive: [true, Validators.required]
-  });
-
-  roles = ROLES;
-  isEditMode = signal(false);
+  schema = signal<FormSchema>({ fields: [] });
+  data = signal<any>({});
   isViewMode = signal(false);
 
   constructor() {
+    this.schemaService.getFormSchema('users').subscribe(schema => {
+      this.schema.set(schema);
+    });
+
     const id = this.route.snapshot.paramMap.get('id');
     const url = this.router.url;
 
     if (id) {
       const user = this.userService.getUserById(id);
       if (user) {
-        this.form.patchValue({
-          ...user,
-        });
+        this.data.set(user);
       }
     }
 
     if (url.includes('view')) {
       this.isViewMode.set(true);
-      this.form.disable();
-    } else if (url.includes('edit')) {
-      this.isEditMode.set(true);
     }
   }
 
-  onSubmit() {
-    if (this.form.valid) {
-      const formValue = this.form.value;
-      const selectedRole = ROLES.find(r => r.name === (formValue.role as any).name);
-
-      const userPayload = {
-        ...formValue,
-        role: selectedRole
-      };
-
-      if (this.isEditMode()) {
-        this.userService.updateUser(userPayload as any);
-      } else {
-        this.userService.addUser(userPayload as any);
-      }
-      this.router.navigate(['/users']);
+  onSave(formData: any) {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.userService.updateUser({ ...formData, id });
+    } else {
+      this.userService.addUser(formData);
     }
+    this.router.navigate(['/users']);
   }
 
   onCancel() {
-    this.form.reset();
     this.router.navigate(['/users']);
   }
 }

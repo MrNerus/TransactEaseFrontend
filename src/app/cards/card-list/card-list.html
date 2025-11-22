@@ -1,10 +1,4 @@
-<app-data-table
-  [data]="cards()"
-  [controls]="{ columns: columns, searchableFields: [] }"
-  [totalItems]="totalItems()"
-  [pageSize]="pageSize()"
-  (pageChange)="onPageChange($event)"
-    [actions]="actions"
-  (action)="onTableAction($event)"
->
+<app-data-table [data]="cards()" [controls]="controls()" [totalItems]="totalItems()" [pageSize]="pageSize()"
+  (pageChange)="onPageChange($event)" (searchChange)="onSearchChange($event)" [actions]="actions"
+  (action)="onTableAction($event)">
 </app-data-table>

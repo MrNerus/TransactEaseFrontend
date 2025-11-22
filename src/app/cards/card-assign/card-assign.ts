@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CardService } from '../card.service';
-import { UserService } from '../../users/user.service';
-import { Card } from '../card.interface';
-import { User } from '../../users/user.interface';
+import { DynamicFormComponent } from '../../dynamic-form/dynamic-form.component';
+import { SchemaService, FormSchema } from '../../services/schema.service';
 
 @Component({
   selector: 'app-card-assign',
@@ -12,46 +10,32 @@ import { User } from '../../users/user.interface';
   styleUrls: ['./card-assign.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [ReactiveFormsModule]
+  imports: [DynamicFormComponent]
 })
 export class CardAssignComponent {
-  private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private cardService = inject(CardService);
-  private userService = inject(UserService);
+  private schemaService = inject(SchemaService);
 
-  form = this.fb.group({
-    cardId: ['', Validators.required],
-    userId: ['', Validators.required]
-  });
-
-  cards = signal<Card[]>([]);
-  users = signal<User[]>([]);
+  schema = signal<FormSchema>({ fields: [] });
+  data = signal<any>({});
 
   constructor() {
-    this.loadInitialData();
+    this.schemaService.getFormSchema('cards-assign').subscribe(schema => {
+      this.schema.set(schema);
+    });
+
     const cardId = this.route.snapshot.paramMap.get('id');
     if (cardId) {
-      this.form.patchValue({ cardId });
+      this.data.set({ cardId });
     }
   }
 
-  loadInitialData(): void {
-    const { cards } = this.cardService.getCards(1, 1000); // Fetch all cards for selection
-    this.cards.set(cards.filter(c => c.organizationId && !c.userId));
-    const { users } = this.userService.getUsers();
-    this.users.set(users);
-  }
-
-  onSubmit(): void {
-    if (this.form.valid) {
-      const { cardId, userId } = this.form.value;
-      if (cardId && userId) {
-        this.cardService.assignCard(cardId, userId);
-        this.router.navigate(['/cards']);
-      }
-    }
+  onSave(formData: any): void {
+    const { cardId, userId } = formData;
+    this.cardService.assignCard(cardId, userId);
+    this.router.navigate(['/cards']);
   }
 
   onCancel(): void {
