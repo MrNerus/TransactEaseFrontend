@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, input, output, signal, computed, Ou
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Permission } from '../users/user.interface';
+import { AdvancedFilterComponent } from '../advanced-filter/advanced-filter';
+import { FilterPayload } from './filter.interface';
 
 export interface ColumnDef {
   key: string;
@@ -25,13 +27,21 @@ export interface SearchChange {
   searchField: string;
 }
 
+export interface TableAction {
+  type: string;            // 'add' | 'view' | 'edit' | 'delete' | ...
+  label: string;           // Button text (if needed)
+  icon: string;            // material icon
+  placement: 'global' | 'row';
+  permission: Permission;
+}
+
 @Component({
   selector: 'app-data-table',
   templateUrl: './data-table.html',
   styleUrls: ['./data-table.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe]
+  imports: [CommonModule, FormsModule, DatePipe, AdvancedFilterComponent]
 })
 export class DataTableComponent {
   Permission = Permission;
@@ -43,15 +53,17 @@ export class DataTableComponent {
   actions = input<TableAction[]>([]);
   @Output() action = new EventEmitter<{ type: string, row?: any }>();
 
-
-
   searchChange = output<SearchChange>();
   pageChange = output<PageChange>();
+  filterChange = output<FilterPayload>();
 
   currentPage = signal(1);
   pageInput = signal(1);
   searchTerm = signal('');
   searchField = signal('all');
+
+  isFilterOpen = signal(false);
+  activeFilterCount = signal(0);
 
   totalPages = computed(() => Math.ceil(this.totalItems() / this.pageSize()));
 
@@ -108,6 +120,15 @@ export class DataTableComponent {
     }
   }
 
+  toggleFilter(): void {
+    this.isFilterOpen.update(v => !v);
+  }
+
+  onFilterApply(payload: FilterPayload): void {
+    this.activeFilterCount.set(payload.conditions.length);
+    this.filterChange.emit(payload);
+  }
+
   private emitSearchChange(): void {
     this.searchChange.emit({ searchTerm: this.searchTerm(), searchField: this.searchField() });
   }
@@ -115,13 +136,4 @@ export class DataTableComponent {
   private emitPageChange(): void {
     this.pageChange.emit({ page: this.currentPage(), pageSize: this.pageSize() });
   }
-
-}
-
-export interface TableAction {
-  type: string;            // 'add' | 'view' | 'edit' | 'delete' | ...
-  label: string;           // Button text (if needed)
-  icon: string;            // material icon
-  placement: 'global' | 'row';
-  permission: Permission;
 }

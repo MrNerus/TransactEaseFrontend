@@ -4,59 +4,74 @@
     <select [(ngModel)]="searchField" (change)="onSearchFieldChange()">
       <option value="all">All Fields</option>
       @for (field of controls().searchableFields; track field) {
-        <option [value]="field">{{ field | titlecase }}</option>
+      <option [value]="field">{{ field | titlecase }}</option>
       }
     </select>
-    @for (a of actions(); track a.type) {
-      @if (a.placement === 'global' && (a.permission == Permission.allowInteraction || a.permission == Permission.viewOnly)) {
-        <button (click)="action.emit({ type: a.type, row: null })" [disabled]="a.permission == Permission.viewOnly">
-          <span class="material-icons">{{ a.icon }}</span>
-          {{ a.label }}
-        </button>
+
+    <button class="filter-btn" (click)="toggleFilter()">
+      <span class="material-icons">filter_list</span>
+      Filter
+      @if (activeFilterCount() > 0) {
+      <span class="badge">{{ activeFilterCount() }}</span>
       }
+    </button>
+
+    @for (a of actions(); track a.type) {
+    @if (a.placement === 'global' && (a.permission == Permission.allowInteraction || a.permission ==
+    Permission.viewOnly)) {
+    <button (click)="action.emit({ type: a.type, row: null })" [disabled]="a.permission == Permission.viewOnly">
+      <span class="material-icons">{{ a.icon }}</span>
+      {{ a.label }}
+    </button>
+    }
     }
   </div>
+
+  <app-advanced-filter [isOpen]="isFilterOpen()" [schema]="controls()" (applyFilter)="onFilterApply($event)"
+    (close)="toggleFilter()"></app-advanced-filter>
 
   <table>
     <thead>
       <tr>
         @for (col of controls().columns; track col.key) {
-          <th>{{ col.label }}</th>
+        <th>{{ col.label }}</th>
         }
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       @for (row of data(); track row.id) {
-        <tr>
-          @for (col of controls().columns; track col.key) {
-            <td>
-              @if (col.isDate) {
-                {{ row[col.key] | date:'short' }}
-              } @else if (col.isBoolean) {
-                {{ row[col.key] ? 'Yes' : 'No' }}
-                            } @else if (col.key === 'role') {
-                {{ row[col.key]?.name || 'N/A' }}
-              } @else {
-                {{ row[col.key] || 'N/A' }}
-              }
-            </td>
+      <tr>
+        @for (col of controls().columns; track col.key) {
+        <td>
+          @if (col.isDate) {
+          {{ row[col.key] | date:'short' }}
+          } @else if (col.isBoolean) {
+          {{ row[col.key] ? 'Yes' : 'No' }}
+          } @else if (col.key === 'role') {
+          {{ row[col.key]?.name || 'N/A' }}
+          } @else {
+          {{ row[col.key] || 'N/A' }}
           }
-          <td>
-            @for (a of actions(); track a.type) {
-              @if (a.placement === 'row' && (a.permission == Permission.allowInteraction || a.permission == Permission.viewOnly)) {
-                <button (click)="action.emit({ type: a.type, row })" title="{{ a.label }}" [disabled]="a.permission == Permission.viewOnly">
-                  <span class="material-icons">{{ a.icon }}</span>
-                </button>
-              }
-            }
-          </td>
-        </tr>
+        </td>
+        }
+        <td>
+          @for (a of actions(); track a.type) {
+          @if (a.placement === 'row' && (a.permission == Permission.allowInteraction || a.permission ==
+          Permission.viewOnly)) {
+          <button (click)="action.emit({ type: a.type, row })" title="{{ a.label }}"
+            [disabled]="a.permission == Permission.viewOnly">
+            <span class="material-icons">{{ a.icon }}</span>
+          </button>
+          }
+          }
+        </td>
+      </tr>
       }
       @empty {
-        <tr>
-          <td [attr.colspan]="controls().columns.length + 1">No data found.</td>
-        </tr>
+      <tr>
+        <td [attr.colspan]="controls().columns.length + 1">No data found.</td>
+      </tr>
       }
     </tbody>
   </table>
@@ -64,16 +79,20 @@
   <div class="pagination">
     <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
       @for (option of pageSizeOptions(); track option) {
-        <option [value]="option">{{ option }} rows</option>
+      <option [value]="option">{{ option }} rows</option>
       }
     </select>
-    <button (click)="firstPage()" [disabled]="currentPage() === 1" title="First Page"><span class="material-icons">first_page</span></button>
-    <button (click)="previousPage()" [disabled]="currentPage() === 1" title="Previous Page"><span class="material-icons">chevron_left</span></button>
+    <button (click)="firstPage()" [disabled]="currentPage() === 1" title="First Page"><span
+        class="material-icons">first_page</span></button>
+    <button (click)="previousPage()" [disabled]="currentPage() === 1" title="Previous Page"><span
+        class="material-icons">chevron_left</span></button>
     <span>Page
       <input type="number" [(ngModel)]="pageInput" (change)="goToPage()" min="1" [max]="totalPages()">
       of {{ totalPages() }}
     </span>
-    <button (click)="nextPage()" [disabled]="currentPage() === totalPages()" title="Next Page"><span class="material-icons">chevron_right</span></button>
-    <button (click)="lastPage()" [disabled]="currentPage() === totalPages()" title="Last Page"><span class="material-icons">last_page</span></button>
+    <button (click)="nextPage()" [disabled]="currentPage() === totalPages()" title="Next Page"><span
+        class="material-icons">chevron_right</span></button>
+    <button (click)="lastPage()" [disabled]="currentPage() === totalPages()" title="Last Page"><span
+        class="material-icons">last_page</span></button>
   </div>
 </div>

@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { Transaction } from './transaction.interface';
 import { ROLES } from '../services/permission.config';
+import { FilterPayload } from '../data-table/filter.interface';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionService {
@@ -52,11 +53,50 @@ export class TransactionService {
     },
   ]);
 
-  getTransactions(searchTerm: string = '', searchField: keyof Transaction | 'all' = 'all', page: number = 1, pageSize: number = 10): {
+  getTransactions(
+    searchTerm: string = '',
+    searchField: keyof Transaction | 'all' = 'all',
+    page: number = 1,
+    pageSize: number = 10,
+    filter: FilterPayload | null = null
+  ): {
     transactions: Transaction[];
     totalItems: number;
   } {
     let filtered = this.transactions();
+
+    // Apply Advanced Filters
+    if (filter && filter.conditions.length > 0) {
+      console.log('Applying Advanced Filter:', filter);
+      filtered = filtered.filter(item => {
+        const matches = filter.conditions.map(condition => {
+          const itemValue = (item as any)[condition.field];
+
+          switch (condition.operator) {
+            case 'eq': return itemValue == condition.value;
+            case 'neq': return itemValue != condition.value;
+            case 'contains': return String(itemValue).toLowerCase().includes(String(condition.value).toLowerCase());
+            case 'gt': return itemValue > condition.value;
+            case 'gte': return itemValue >= condition.value;
+            case 'lt': return itemValue < condition.value;
+            case 'lte': return itemValue <= condition.value;
+            case 'between':
+              return Array.isArray(condition.value) &&
+                itemValue >= condition.value[0] &&
+                itemValue <= condition.value[1];
+            case 'in':
+              return Array.isArray(condition.value) && condition.value.includes(String(itemValue));
+            default: return true;
+          }
+        });
+
+        if (filter.logic === 'or') {
+          return matches.some(m => m);
+        } else {
+          return matches.every(m => m);
+        }
+      });
+    }
 
     if (searchTerm) {
       searchTerm = searchTerm.toLowerCase();

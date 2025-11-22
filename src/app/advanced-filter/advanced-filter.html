@@ -1,0 +1,77 @@
+<div class="filter-drawer-backdrop" [class.open]="isOpen()" (click)="onClose()"></div>
+<div class="filter-drawer" [class.open]="isOpen()">
+    <div class="drawer-header">
+        <h3>Advanced Filters</h3>
+        <button class="close-btn" (click)="onClose()">
+            <span class="material-icons">close</span>
+        </button>
+    </div>
+
+    <div class="drawer-content" [formGroup]="filterForm">
+        <div class="form-group">
+            <label>Logic</label>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" formControlName="logic" value="and"> AND (All match)
+                </label>
+                <label>
+                    <input type="radio" formControlName="logic" value="or"> OR (Any match)
+                </label>
+            </div>
+        </div>
+
+        <div class="conditions-list" formArrayName="conditions">
+            @for (condition of conditions.controls; track condition; let i = $index) {
+            <div class="condition-row" [formGroupName]="i">
+                <div class="condition-header">
+                    <span>Condition {{ i + 1 }}</span>
+                    <button type="button" class="remove-btn" (click)="removeCondition(i)">
+                        <span class="material-icons">delete</span>
+                    </button>
+                </div>
+
+                <div class="form-row">
+                    <select formControlName="field" class="form-control">
+                        <option value="" disabled>Select Field</option>
+                        @for (field of schema().searchableFields; track field) {
+                        <option [value]="field">{{ getFieldLabel(field) }}</option>
+                        }
+                    </select>
+
+                    <select formControlName="operator" class="form-control">
+                        @for (op of operators; track op.value) {
+                        <option [value]="op.value">{{ op.label }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-row value-row">
+                    @if (isBoolean(i)) {
+                    <select formControlName="value" class="form-control">
+                        <option [value]="true">Yes</option>
+                        <option [value]="false">No</option>
+                    </select>
+                    } @else {
+                    <input [type]="getInputType(i)" formControlName="value" class="form-control" placeholder="Value">
+
+                    @if (condition.get('operator')?.value === 'between') {
+                    <span class="separator">to</span>
+                    <input [type]="getInputType(i)" formControlName="valueEnd" class="form-control"
+                        placeholder="End Value">
+                    }
+                    }
+                </div>
+            </div>
+            }
+        </div>
+
+        <button type="button" class="add-btn" (click)="addCondition()">
+            <span class="material-icons">add</span> Add Condition
+        </button>
+    </div>
+
+    <div class="drawer-footer">
+        <button class="btn btn-secondary" (click)="clearFilters()">Clear All</button>
+        <button class="btn btn-primary" (click)="onApply()" [disabled]="filterForm.invalid">Apply Filters</button>
+    </div>
+</div>

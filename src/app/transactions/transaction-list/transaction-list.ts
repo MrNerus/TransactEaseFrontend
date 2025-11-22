@@ -6,6 +6,7 @@ import { PermissionService } from '../../services/permission.service';
 import { Transaction } from '../transaction.interface';
 import { TransactionService } from '../transaction.service';
 import { SchemaService } from '../../services/schema.service';
+import { FilterPayload } from '../../data-table/filter.interface';
 
 @Component({
   selector: 'app-transaction-list',
@@ -25,6 +26,7 @@ export class TransactionList {
   pageSize = signal(20);
   searchTerm = signal('');
   searchField = signal<keyof Transaction | 'all'>('all');
+  filter = signal<FilterPayload | null>(null);
 
   controls = signal<Controls>({ columns: [], searchableFields: [] });
 
@@ -49,7 +51,8 @@ export class TransactionList {
       this.searchTerm(),
       this.searchField(),
       1,
-      this.pageSize()
+      this.pageSize(),
+      this.filter()
     );
     this.transactions.set(result.transactions);
     this.totalItems.set(result.totalItems);
@@ -66,10 +69,16 @@ export class TransactionList {
       this.searchTerm(),
       this.searchField(),
       pageChange.page,
-      pageChange.pageSize
+      pageChange.pageSize,
+      this.filter()
     );
     this.transactions.set(result.transactions);
     this.totalItems.set(result.totalItems);
+  }
+
+  onFilterChange(payload: FilterPayload): void {
+    this.filter.set(payload);
+    this.loadTransactions();
   }
 
   onTableAction(e: { type: string, row?: Transaction }) {
