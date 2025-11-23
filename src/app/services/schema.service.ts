@@ -5,10 +5,12 @@ import { ColumnDef } from '../data-table/data-table';
 export interface FormField {
     key: string;
     label: string;
-    type: 'text' | 'number' | 'date' | 'select' | 'boolean' | 'textarea';
+    type: 'text' | 'number' | 'date' | 'select' | 'textarea' | 'lookup' | 'boolean';
     required?: boolean;
-    options?: { label: string; value: any }[]; // For select inputs
     readonly?: boolean;
+    options?: { label: string; value: any }[];
+    lookupResource?: string;
+    displayField?: string;
 }
 
 export interface FormSchema {
@@ -23,7 +25,6 @@ export interface TableSchema {
 @Injectable({ providedIn: 'root' })
 export class SchemaService {
 
-    // Mock data - in a real app, these would be fetched from an API
     private transactionTableSchema: TableSchema = {
         columns: [
             { key: 'id', label: 'Transaction ID' },
@@ -37,12 +38,11 @@ export class SchemaService {
 
     private transactionFormSchema: FormSchema = {
         fields: [
-            { key: 'id', label: 'Transaction ID', type: 'text', readonly: true },
-            { key: 'userId', label: 'Sender', type: 'text', readonly: true },
-            { key: 'receiverId', label: 'Receiver', type: 'text', readonly: true },
-            { key: 'amount', label: 'Amount', type: 'number', readonly: true },
-            { key: 'cashbackId', label: 'Cashback/Loyalty ID', type: 'text', readonly: true }, // Placeholder for cashback info
-            { key: 'createdAt', label: 'Date', type: 'date', readonly: true },
+            { key: 'userId', label: 'Sender', type: 'lookup', required: true, lookupResource: 'users', displayField: 'name' },
+            { key: 'receiverId', label: 'Receiver', type: 'lookup', required: true, lookupResource: 'users', displayField: 'name' },
+            { key: 'organizationId', label: 'Organization', type: 'lookup', required: true, lookupResource: 'organizations', displayField: 'name' },
+            { key: 'amount', label: 'Amount', type: 'number', required: true },
+            { key: 'cashbackId', label: 'Cashback Scheme', type: 'lookup', lookupResource: 'cashback-schemes', displayField: 'name' },
         ]
     };
 
@@ -75,20 +75,21 @@ export class SchemaService {
             { key: 'cardType', label: 'Card Type', type: 'select', options: [{ label: 'Debit', value: 'debit' }, { label: 'Credit', value: 'credit' }], required: true },
             { key: 'issueDate', label: 'Issue Date', type: 'date', required: true },
             { key: 'expiryDate', label: 'Expiry Date', type: 'date', required: true },
+            { key: 'status', label: 'Status', type: 'select', options: [{ label: 'Active', value: 'active' }, { label: 'Blocked', value: 'blocked' }], required: true },
+            { key: 'userId', label: 'Assigned User', type: 'lookup', required: true, lookupResource: 'users', displayField: 'name' },
+            { key: 'cvv', label: 'CVV', type: 'text', required: true }
         ]
     };
 
     private cardAssignSchema: FormSchema = {
         fields: [
-            { key: 'cardId', label: 'Card ID', type: 'text', readonly: true },
-            { key: 'userId', label: 'Assign To User (ID)', type: 'text', required: true },
+            { key: 'userId', label: 'Assign To User', type: 'lookup', required: true, lookupResource: 'users', displayField: 'name' }
         ]
     };
 
     private cardTransferSchema: FormSchema = {
         fields: [
-            { key: 'cardIds', label: 'Card IDs (comma separated)', type: 'text', required: true },
-            { key: 'organizationId', label: 'Transfer To Organization (ID)', type: 'text', required: true },
+            { key: 'targetUserId', label: 'Transfer To User', type: 'lookup', required: true, lookupResource: 'users', displayField: 'name' }
         ]
     };
 
@@ -122,7 +123,7 @@ export class SchemaService {
     private organizationFormSchema: FormSchema = {
         fields: [
             { key: 'name', label: 'Name', type: 'text', required: true },
-            { key: 'parentId', label: 'Parent Organization ID', type: 'text' },
+            { key: 'parentId', label: 'Parent Organization', type: 'lookup', lookupResource: 'organizations', displayField: 'name' },
         ]
     };
 
@@ -161,7 +162,7 @@ export class SchemaService {
         fields: [
             { key: 'fullName', label: 'Full Name', type: 'text', required: true },
             { key: 'email', label: 'Email', type: 'text', required: true },
-            { key: 'organizationId', label: 'Organization ID', type: 'text', required: true },
+            { key: 'organizationId', label: 'Organization', type: 'lookup', required: true, lookupResource: 'organizations', displayField: 'name' },
             {
                 key: 'role', label: 'Role', type: 'select', options: [
                     { label: 'Admin', value: 'admin' },
@@ -189,13 +190,12 @@ export class SchemaService {
         fields: [
             { key: 'fullName', label: 'Full Name', type: 'text', required: true },
             { key: 'email', label: 'Email', type: 'text', required: true },
-            { key: 'organizationId', label: 'Organization ID', type: 'text', required: true },
+            { key: 'organizationId', label: 'Organization', type: 'lookup', required: true, lookupResource: 'organizations', displayField: 'name' },
             { key: 'isActive', label: 'Active', type: 'boolean' }
         ]
     };
 
     getTableSchema(resource: string): Observable<TableSchema> {
-        // Simulate API call
         if (resource === 'transactions') {
             return of(this.transactionTableSchema);
         }
@@ -217,7 +217,6 @@ export class SchemaService {
         if (resource === 'users') {
             return of(this.userTableSchema);
         }
-        // Default or error handling could go here
         return of({ columns: [], searchableFields: [] });
     }
 

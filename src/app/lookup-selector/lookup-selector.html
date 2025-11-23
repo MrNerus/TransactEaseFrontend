@@ -1,0 +1,16 @@
+<div class="lookup-backdrop" [class.open]="isOpen()" (click)="onClose()"></div>
+<div class="lookup-modal" [class.open]="isOpen()">
+    <div class="modal-header">
+        <h3>Select {{ resource() | titlecase }}</h3>
+        <!-- <button class="close-btn" (click)="onClose()">
+            <span class="material-icons">close</span>
+        </button> -->
+    </div>
+
+    <div class="modal-content">
+        <app-data-table [data]="data()" [controls]="controls()" [totalItems]="totalItems()" [pageSize]="pageSize()"
+            (pageChange)="onPageChange($event)" (searchChange)="onSearchChange($event)" [actions]="actions()"
+            (action)="onTableAction($event)">
+        </app-data-table>
+    </div>
+</div>
