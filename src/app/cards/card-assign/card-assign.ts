@@ -33,8 +33,8 @@ export class CardAssignComponent {
   }
 
   onSave(formData: any): void {
-    const { cardId, userId } = formData;
-    this.cardService.assignCard(cardId, userId);
+    const { cardId, userId, issueDate, expiryDate } = formData;
+    this.cardService.assignCard(cardId, userId, issueDate, expiryDate);
     this.router.navigate(['/cards']);
   }
 

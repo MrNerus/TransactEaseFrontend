@@ -172,6 +172,17 @@ tbody tr:hover td {
   background-color: var(--background-hover);
 }
 
+.data-row {
+  cursor: pointer;
+  outline: none;
+}
+
+.data-row:focus {
+  background-color: var(--background-hover);
+  outline: 2px solid var(--primary-color);
+  outline-offset: -2px;
+}
+
 .action-btn {
   padding: .4rem .6rem;
   border-radius: 5px;

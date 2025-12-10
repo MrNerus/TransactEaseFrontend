@@ -83,13 +83,15 @@ export class SchemaService {
 
     private cardAssignSchema: FormSchema = {
         fields: [
-            { key: 'userId', label: 'Assign To User', type: 'lookup', required: true, lookupResource: 'users', displayField: 'name' }
+            { key: 'userId', label: 'Assign To User', type: 'lookup', required: true, lookupResource: 'users', displayField: 'name' },
+            { key: 'issueDate', label: 'Issue Date', type: 'date', required: true },
+            { key: 'expiryDate', label: 'Expiry Date', type: 'date', required: true }
         ]
     };
 
     private cardTransferSchema: FormSchema = {
         fields: [
-            { key: 'targetUserId', label: 'Transfer To User', type: 'lookup', required: true, lookupResource: 'users', displayField: 'name' }
+            { key: 'targetOrganizationId', label: 'Transfer To', type: 'lookup', required: true, lookupResource: 'organizations', displayField: 'name' }
         ]
     };
 

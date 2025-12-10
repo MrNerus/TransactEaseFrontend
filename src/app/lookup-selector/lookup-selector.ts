@@ -92,7 +92,7 @@ export class LookupSelectorComponent {
     }
 
     onTableAction(e: { type: string, row?: any }) {
-        if (e.type === 'select' && e.row) {
+        if ((e.type === 'select' || e.type === 'rowClick' || e.type === 'rowEnter') && e.row) {
             this.onSelect(e.row);
         }
     }

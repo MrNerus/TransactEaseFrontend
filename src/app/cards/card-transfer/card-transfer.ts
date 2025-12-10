@@ -34,11 +34,11 @@ export class CardTransferComponent {
   }
 
   onSave(formData: any): void {
-    const { cardIds, organizationId } = formData;
+    const { cardIds, targetOrganizationId } = formData;
     // Handle comma separated string for cardIds if entered manually
     const ids = Array.isArray(cardIds) ? cardIds : cardIds.split(',').map((id: string) => id.trim());
 
-    this.cardService.transferCards(ids, organizationId);
+    this.cardService.transferCards(ids, targetOrganizationId);
     this.router.navigate(['/cards']);
   }
 

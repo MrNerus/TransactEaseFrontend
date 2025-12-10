@@ -1,120 +1,129 @@
-
-.form-container {
-  padding: 2rem;
-  background-color: var(--background-dark);
-  color: var(--text-light);
+.card-add-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: 100%;
 }
 
-h1 {
-  color: var(--primary-color);
-  text-shadow: 0 0 10px rgba(0, 194, 255, 0.7);
-  margin-bottom: 2rem;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h2 {
+  margin: 0;
+  color: var(--text-main);
+}
+
+.bulk-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.table-responsive {
+  flex: 1;
+  overflow: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--background-card);
 }
 
 table {
   width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 1.5rem;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-th, td {
-  padding: 0.8rem;
-  text-align: left;
-  border: 1px solid var(--border-color);
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--background-dark);
 }
 
 th {
-  background-color: var(--background-light);
-  color: var(--primary-color);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
 }
 
-tbody {
-  display: block;
-  max-height: 300px; /* Adjust as needed */
-  overflow-y: auto;
+td {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: top;
 }
 
-tr {
-  display: table;
+.form-control {
   width: 100%;
-  table-layout: fixed;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-}
-
-input[type="text"],
-textarea,
-select,
-/* Combined date input styles with others */
-input[type="date"] {
- width: 100%;
-  padding: 0.4rem; /* Reduced padding to fit in cells */
+  padding: 0.5rem;
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background-color: var(--background-light);
-  color: var(--text-light);
-  /* Removed font size as it was inconsistent */
-  font-size: 1rem;
+  border-radius: 4px;
+  background: var(--background-dark);
+  color: var(--text-main);
+  box-sizing: border-box;
+  /* Important for width: 100% */
 }
 
-input[type="checkbox"] {
-  margin-right: 0.5rem;
+.form-control:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.small-input {
+  width: 60px;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.btn-icon:hover {
+  background: var(--background-hover);
+  color: var(--danger-color);
 }
 
 .form-actions {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   display: flex;
   gap: 1rem;
+  justify-content: flex-end;
 }
 
-.btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  border: none;
+.lookup-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.lookup-input input[readonly] {
   cursor: pointer;
-  transition: background-color var(--animation-duration) var(--animation-easing);
+  background-color: var(--background-hover);
 }
 
-.btn-primary {
-  background-color: var(--primary-color);
-  color: var(--text-dark);
+/* Scrollbar styling */
+.table-responsive::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-.btn-primary:hover {
-  background-color: var(--accent-color);
+.table-responsive::-webkit-scrollbar-track {
+  background: var(--background-dark);
 }
 
-.btn-primary:disabled {
-  background-color: var(--border-color);
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background-color: var(--secondary-color);
-  color: var(--text-dark);
-}
-
-.btn-secondary:hover {
-  background-color: var(--accent-color);
-}
-
-.btn-danger {
-  background-color: var(--danger-color);
-  color: var(--text-light);
-}
-.btn-danger:hover {
-  background-color: var(--danger-hover-color);
-}
-
-.form-group select {
-  /* Ensure appearance is consistent */
-  appearance: none;
-  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%20viewBox%3D%220%200%20292.4%20292.4%22%3E%3Cpath%20fill%3D%22%23E0E0E0%22%20d%3D%22M287%2C197.2L159.7%2C69.8c-3-3-7.9-3-10.9%2C0L5.4%2C197.2c-3%2C3-3%2C7.9%2C0%2C10.9l2.2%2C2.2c3%2C3%2C7.9%2C3%2C10.9%2C0l130.3-130.3l130.3%2C130.3c3%2C3%2C7.9%2C3%2C10.9%2C0l2.2-2.2C290%2C205.1%2C290%2C200.2%2C287%2C197.2z%22%2F%3E%3C%2Fsvg%3E');
-  background-repeat: no-repeat;
-  background-position: right 0.7em top 50%, 0 0;
-  background-size: 0.65em auto, 100%;
+.table-responsive::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
 }

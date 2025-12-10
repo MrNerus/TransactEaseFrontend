@@ -1,0 +1,5 @@
+<div class="card-edit-container">
+    <h2>Edit Card</h2>
+    <app-dynamic-form [schema]="schema()" [data]="data()" (save)="onSave($event)"
+        (cancel)="onCancel()"></app-dynamic-form>
+</div>

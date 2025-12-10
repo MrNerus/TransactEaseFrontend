@@ -33,6 +33,7 @@ export class CardListComponent {
     { type: 'add', label: 'Add', icon: 'add', placement: 'global', permission: this.permissionService.getPermission('cards_add') },
     { type: 'transfer', label: 'Transfer', icon: 'swap_horiz', placement: 'row', permission: this.permissionService.getPermission('cards_edit') },
     { type: 'assign', label: 'Assign', icon: 'person_add', placement: 'row', permission: this.permissionService.getPermission('cards_edit') },
+    { type: 'edit', label: 'Edit', icon: 'edit', placement: 'row', permission: this.permissionService.getPermission('cards_edit') },
     { type: 'view', label: 'View', icon: 'visibility', placement: 'row', permission: this.permissionService.getPermission('cards_view') }
   ];
 
@@ -82,6 +83,11 @@ export class CardListComponent {
       case 'view':
         if (!(e.row)) break;
         this.router.navigate(['/cards/view', e.row.id]);
+        break;
+
+      case 'edit':
+        if (!(e.row)) break;
+        this.router.navigate(['/cards/edit', e.row.id]);
         break;
 
     }

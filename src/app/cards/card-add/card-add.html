@@ -1,4 +1,60 @@
 <div class="card-add-container">
-  <h2>Add New Card</h2>
-  <app-dynamic-form [schema]="schema()" (save)="onSave($event)" (cancel)="onCancel()"></app-dynamic-form>
+  <div class="header">
+    <h2>Add New Cards</h2>
+    <div class="actions">
+      <button class="btn btn-primary" (click)="addCardRow()">
+        <span class="material-icons">add</span> Add Row
+      </button>
+    </div>
+  </div>
+
+  <form [formGroup]="form" class="bulk-form">
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Card Number</th>
+            <th>Type</th>
+            <th>CVV</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody formArrayName="cards">
+          @for (group of cardsArray.controls; track $index) {
+          <tr [formGroupName]="$index">
+            <td>
+              <input type="text" formControlName="cardNumber" class="form-control" (keydown.enter)="addCardRow()"
+                placeholder="xxxx-xxxx-xxxx-xxxx">
+            </td>
+            <td>
+              <select formControlName="cardType" class="form-control" (keydown.enter)="addCardRow()">
+                <option value="debit">Debit</option>
+                <option value="credit">Credit</option>
+              </select>
+            </td>
+            <td>
+              <input type="text" formControlName="cvv" class="form-control small-input" (keydown.enter)="addCardRow()"
+                placeholder="123">
+            </td>
+            <td>
+              <button type="button" class="btn-icon delete" (click)="removeCardRow($index)" title="Remove Row">
+                <span class="material-icons">delete</span>
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" (click)="onSave()" [disabled]="form.invalid" class="btn btn-success">Save All</button>
+      <button type="button" (click)="onCancel()" class="btn btn-secondary">Cancel</button>
+    </div>
+  </form>
+
+  @if (activeLookupIndex() !== null) {
+  <app-lookup-selector resource="users" displayField="name" [isOpen]="true" (itemSelected)="onLookupSelect($event)"
+    (close)="closeLookup()"></app-lookup-selector>
+  }
 </div>

@@ -19,6 +19,7 @@ import { CardAddComponent } from './cards/card-add/card-add';
 import { CardTransferComponent } from './cards/card-transfer/card-transfer';
 import { CardAssignComponent } from './cards/card-assign/card-assign';
 import { CardViewComponent } from './cards/card-view/card-view';
+import { CardEditComponent } from './cards/card-edit/card-edit';
 import { TransactionFormComponent } from './transactions/transaction-form/transaction-form';
 
 export const routes: Routes = [
@@ -58,9 +59,10 @@ export const routes: Routes = [
 
   { path: 'cards', component: CardListComponent, canActivate: [authGuard], data: { permission: 'nav_cards' } },
   { path: 'cards/add', component: CardAddComponent, canActivate: [authGuard], data: { permission: 'cards_add' } },
-  { path: 'cards/transfer', component: CardTransferComponent, canActivate: [authGuard], data: { permission: 'cards_edit' } },
+  { path: 'cards/transfer/:id', component: CardTransferComponent, canActivate: [authGuard], data: { permission: 'cards_edit' } },
   { path: 'cards/assign', component: CardAssignComponent, canActivate: [authGuard], data: { permission: 'cards_edit' } },
   { path: 'cards/assign/:id', component: CardAssignComponent, canActivate: [authGuard], data: { permission: 'cards_edit' } },
+  { path: 'cards/edit/:id', component: CardEditComponent, canActivate: [authGuard], data: { permission: 'cards_edit' } },
   { path: 'cards/view/:id', component: CardViewComponent, canActivate: [authGuard], data: { permission: 'cards_view' } },
 
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
