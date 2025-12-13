@@ -42,14 +42,15 @@ export class OrganizationListComponent {
   }
 
   loadOrganizations(): void {
-    const result = this.organizationService.getOrganizations(
+    this.organizationService.getOrganizations(
       this.searchTerm(),
       this.searchField(),
       1,
       this.pageSize()
-    );
-    this.organizations.set(result.organizations);
-    this.totalItems.set(result.totalItems);
+    ).subscribe(result => {
+      this.organizations.set(result.organizations);
+      this.totalItems.set(result.totalItems);
+    });
   }
 
   onSearchChange(searchChange: SearchChange): void {
@@ -59,20 +60,22 @@ export class OrganizationListComponent {
   }
 
   onPageChange(pageChange: PageChange): void {
-    const result = this.organizationService.getOrganizations(
+    this.organizationService.getOrganizations(
       this.searchTerm(),
       this.searchField(),
       pageChange.page,
       pageChange.pageSize
-    );
-    this.organizations.set(result.organizations);
-    this.totalItems.set(result.totalItems);
+    ).subscribe(result => {
+      this.organizations.set(result.organizations);
+      this.totalItems.set(result.totalItems);
+    });
   }
 
   deleteOrganization(id: string): void {
     if (confirm(`Are you sure you want to delete organization ${id}?`)) {
-      this.organizationService.deleteOrganization(id);
-      this.loadOrganizations();
+      this.organizationService.deleteOrganization(id).subscribe(() => {
+        this.loadOrganizations();
+      });
     }
   }
 

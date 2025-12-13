@@ -49,37 +49,40 @@ export class LookupSelectorComponent {
     }
 
     loadData(): void {
-        const result = this.lookupService.getData(
+        this.lookupService.getData(
             this.resource(),
             this.searchTerm(),
             1,
             this.pageSize()
-        );
-        this.data.set(result.data);
-        this.totalItems.set(result.totalItems);
+        ).subscribe(result => {
+            this.data.set(result.data);
+            this.totalItems.set(result.totalItems);
+        });
     }
 
     onSearchChange(searchChange: SearchChange): void {
         this.searchTerm.set(searchChange.searchTerm);
-        const result = this.lookupService.getData(
+        this.lookupService.getData(
             this.resource(),
             this.searchTerm(),
             1,
             this.pageSize()
-        );
-        this.data.set(result.data);
-        this.totalItems.set(result.totalItems);
+        ).subscribe(result => {
+            this.data.set(result.data);
+            this.totalItems.set(result.totalItems);
+        });
     }
 
     onPageChange(pageChange: PageChange): void {
-        const result = this.lookupService.getData(
+        this.lookupService.getData(
             this.resource(),
             this.searchTerm(),
             pageChange.page,
             pageChange.pageSize
-        );
-        this.data.set(result.data);
-        this.totalItems.set(result.totalItems);
+        ).subscribe(result => {
+            this.data.set(result.data);
+            this.totalItems.set(result.totalItems);
+        });
     }
 
     onSelect(row: any) {

@@ -30,10 +30,11 @@ export class OrganizationFormComponent {
     const url = this.router.url;
 
     if (id) {
-      const organization = this.organizationService.getOrganizationById(id);
-      if (organization) {
-        this.data.set(organization);
-      }
+      this.organizationService.getOrganizationById(id).subscribe(organization => {
+        if (organization) {
+          this.data.set(organization);
+        }
+      });
     }
 
     if (url.includes('view')) {
@@ -44,11 +45,14 @@ export class OrganizationFormComponent {
   onSave(formData: any) {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.organizationService.updateOrganization({ ...formData, id });
+      this.organizationService.updateOrganization({ ...formData, id }).subscribe(() => {
+        this.router.navigate(['/organizations']);
+      });
     } else {
-      this.organizationService.addOrganization(formData);
+      this.organizationService.addOrganization(formData).subscribe(() => {
+        this.router.navigate(['/organizations']);
+      });
     }
-    this.router.navigate(['/organizations']);
   }
 
   onCancel() {
