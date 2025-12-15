@@ -15,9 +15,9 @@ export interface User {
   id: string;
   fullName: string;
   email: string;
-  organizationId: string;
+  organizationId: number;
   isActive: boolean;
-  role: string;
+  role?: string;
   createdAt: string;
   permissions?: {
     [key: string]: Permission;

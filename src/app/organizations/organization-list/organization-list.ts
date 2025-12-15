@@ -97,7 +97,7 @@ export class OrganizationListComponent {
 
       case 'delete':
         if (!(e.row)) break;
-        this.deleteOrganization(e.row.id);
+        this.deleteOrganization(`${e.row.id}`);
         break;
     }
   }

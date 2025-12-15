@@ -11,16 +11,16 @@ export class OrganizationService {
   private authService = inject(AuthService);
   private http = inject(HttpClient);
   private organizations = signal<Organization[]>([
-    { id: 'org1', name: 'Head Office', createdAt: new Date().toISOString() },
-    { id: 'org2', name: 'Branch A', parentId: 'org1', createdAt: new Date().toISOString() },
-    { id: 'org3', name: 'Branch B', parentId: 'org1', createdAt: new Date().toISOString() },
-    { id: 'org4', name: 'Counter 1 (Branch A)', parentId: 'org2', createdAt: new Date().toISOString() },
-    { id: 'org5', name: 'Counter 2 (Branch A)', parentId: 'org2', createdAt: new Date().toISOString() },
-    { id: 'org6', name: 'Counter 1 (Branch B)', parentId: 'org3', createdAt: new Date().toISOString() },
-    { id: 'org7', name: 'Regional Office X', createdAt: new Date().toISOString() },
-    { id: 'org8', name: 'Branch X1', parentId: 'org7', createdAt: new Date().toISOString() },
-    { id: 'org9', name: 'Branch X2', parentId: 'org7', createdAt: new Date().toISOString() },
-    { id: 'org10', name: 'Counter X1 (Branch X1)', parentId: 'org8', createdAt: new Date().toISOString() },
+    { id: 1, name: 'Head Office', createdAt: new Date().toISOString() },
+    { id: 2, name: 'Branch A', parentId: 1, createdAt: new Date().toISOString() },
+    { id: 3, name: 'Branch B', parentId: 1, createdAt: new Date().toISOString() },
+    { id: 4, name: 'Counter 1 (Branch A)', parentId: 2, createdAt: new Date().toISOString() },
+    { id: 5, name: 'Counter 2 (Branch A)', parentId: 2, createdAt: new Date().toISOString() },
+    { id: 6, name: 'Counter 1 (Branch B)', parentId: 3, createdAt: new Date().toISOString() },
+    { id: 7, name: 'Regional Office X', createdAt: new Date().toISOString() },
+    { id: 8, name: 'Branch X1', parentId: 7, createdAt: new Date().toISOString() },
+    { id: 9, name: 'Branch X2', parentId: 7, createdAt: new Date().toISOString() },
+    { id: 10, name: 'Counter X1 (Branch X1)', parentId: 8, createdAt: new Date().toISOString() },
   ]);
 
   getOrganizations(searchTerm: string = '', searchField: keyof Organization | 'all' = 'all', page: number = 1, pageSize: number = 10): Observable<{
@@ -78,8 +78,8 @@ export class OrganizationService {
     }
   }
 
-  private getDescendantOrgIds(parentId: string): Set<string> {
-    const descendantIds = new Set<string>();
+  private getDescendantOrgIds(parentId: number): Set<number> {
+    const descendantIds = new Set<number>();
     const queue = [parentId];
     const allOrgs = this.organizations();
 
@@ -94,7 +94,7 @@ export class OrganizationService {
     return descendantIds;
   }
 
-  getOrganizationById(id: string): Observable<Organization | undefined> {
+  getOrganizationById(id: number | string): Observable<Organization | undefined> {
     if (APP_CONSTANTS.IS_BACKEND_AVAILABLE) {
       return this.http.get<ApiResponse<any>>(`${APP_CONSTANTS.API_URL}/api/organization/get/${id}`).pipe(
         map(response => ({
@@ -105,7 +105,7 @@ export class OrganizationService {
         }))
       );
     }
-    return of(this.organizations().find(org => org.id === id));
+    return of(this.organizations().find(org => org.id == id));
   }
 
   addOrganization(org: Omit<Organization, 'id' | 'createdAt'>): Observable<Organization | void> {
@@ -113,7 +113,7 @@ export class OrganizationService {
       return this.http.post<Organization>(`${APP_CONSTANTS.API_URL}/api/organization/create`, org);
     } else {
       const newOrg: Organization = {
-        id: 'org' + (this.organizations().length + 1),
+        id: this.organizations().length + 1,
         createdAt: new Date().toISOString(),
         ...org,
       };
@@ -137,7 +137,7 @@ export class OrganizationService {
       let updated = false;
       this.organizations.update(orgs =>
         orgs.map(org => {
-          if (org.id === updatedOrg.id) {
+          if (org.id == updatedOrg.id) {
             updated = true;
             return { ...org, ...updatedOrg };
           }
@@ -148,14 +148,14 @@ export class OrganizationService {
     }
   }
 
-  deleteOrganization(id: string): Observable<boolean> {
+  deleteOrganization(id: number | string): Observable<boolean> {
     if (APP_CONSTANTS.IS_BACKEND_AVAILABLE) {
       return this.http.delete<ApiResponse<any>>(`${APP_CONSTANTS.API_URL}/api/organization/delete/${id}`).pipe(
         map(response => response.status === 0 || response.status === 'SUCCESS') // Assuming 0/SUCCESS is success
       );
     } else {
       const initialLength = this.organizations().length;
-      this.organizations.update(orgs => orgs.filter(org => org.id !== id));
+      this.organizations.update(orgs => orgs.filter(org => org.id != id));
       return of(this.organizations().length < initialLength);
     }
   }

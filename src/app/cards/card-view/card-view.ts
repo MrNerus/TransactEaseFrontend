@@ -22,7 +22,9 @@ export class CardViewComponent {
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.card = this.cardService.getCardById(id);
+      this.cardService.getCardById(id).subscribe(card => {
+        this.card = card;
+      });
     }
   }
 

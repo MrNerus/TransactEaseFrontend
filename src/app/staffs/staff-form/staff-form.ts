@@ -30,10 +30,11 @@ export class StaffFormComponent {
     const url = this.router.url;
 
     if (id) {
-      const staff = this.staffService.getStaffById(id);
-      if (staff) {
-        this.data.set(staff);
-      }
+      this.staffService.getStaffById(id).subscribe(staff => {
+        if (staff) {
+          this.data.set(staff);
+        }
+      });
     }
 
     if (url.includes('view')) {
@@ -44,11 +45,14 @@ export class StaffFormComponent {
   onSave(formData: any) {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.staffService.updateStaff({ ...formData, id });
+      this.staffService.updateStaff({ ...formData, id }).subscribe(() => {
+        this.router.navigate(['/staffs']);
+      });
     } else {
-      this.staffService.addStaff(formData);
+      this.staffService.addStaff(formData).subscribe(() => {
+        this.router.navigate(['/staffs']);
+      });
     }
-    this.router.navigate(['/staffs']);
   }
 
   onCancel() {

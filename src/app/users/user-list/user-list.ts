@@ -42,14 +42,15 @@ export class UserListComponent {
   }
 
   loadUsers(): void {
-    const result = this.userService.getUsers(
+    this.userService.getUsers(
       this.searchTerm(),
       this.searchField(),
       1,
       this.pageSize()
-    );
-    this.users.set(result.users);
-    this.totalItems.set(result.totalItems);
+    ).subscribe(result => {
+      this.users.set(result.users);
+      this.totalItems.set(result.totalItems);
+    });
   }
 
   onSearchChange(searchChange: SearchChange): void {
@@ -59,20 +60,22 @@ export class UserListComponent {
   }
 
   onPageChange(pageChange: PageChange): void {
-    const result = this.userService.getUsers(
+    this.userService.getUsers(
       this.searchTerm(),
       this.searchField(),
       pageChange.page,
       pageChange.pageSize
-    );
-    this.users.set(result.users);
-    this.totalItems.set(result.totalItems);
+    ).subscribe(result => {
+      this.users.set(result.users);
+      this.totalItems.set(result.totalItems);
+    });
   }
 
   deleteUser(id: string): void {
     if (confirm(`Are you sure you want to delete user ${id}?`)) {
-      this.userService.deleteUser(id);
-      this.loadUsers();
+      this.userService.deleteUser(id).subscribe(() => {
+        this.loadUsers();
+      });
     }
   }
   onTableAction(e: { type: string, row?: User }) {

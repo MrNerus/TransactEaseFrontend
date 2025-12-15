@@ -1,6 +1,6 @@
 export interface Organization {
-  id: string;
+  id: number;
   name: string;
-  parentId?: string;
+  parentId?: number;
   createdAt: string;
 }

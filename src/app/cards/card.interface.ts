@@ -1,10 +1,11 @@
 export interface Card {
-  id: string;
+  id: string; // Mapped from cardNumber if id is missing
   cardNumber: string;
-  cardType: 'debit' | 'credit';
-  status: 'active' | 'inactive' | 'expired';
-  organizationId?: string;
-  userId?: string;
-  issueDate: Date;
-  expiryDate: Date;
+  cardType: string;
+  status: string;
+  organizationId: number;
+  userId?: number;
+  issueDate: string;
+  expiryDate: string;
+  cvv?: string; // Optional as per get-all example (it shows it, but maybe not always needed in list? keeping it)
 }

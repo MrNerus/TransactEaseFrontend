@@ -42,14 +42,15 @@ export class StaffListComponent {
   }
 
   loadStaffs(): void {
-    const result = this.staffService.getStaffs(
+    this.staffService.getStaffs(
       this.searchTerm(),
       this.searchField(),
       1,
       this.pageSize()
-    );
-    this.staffs.set(result.staffs);
-    this.totalItems.set(result.totalItems);
+    ).subscribe(result => {
+      this.staffs.set(result.staffs);
+      this.totalItems.set(result.totalItems);
+    });
   }
 
   onSearchChange(searchChange: SearchChange): void {
@@ -59,20 +60,22 @@ export class StaffListComponent {
   }
 
   onPageChange(pageChange: PageChange): void {
-    const result = this.staffService.getStaffs(
+    this.staffService.getStaffs(
       this.searchTerm(),
       this.searchField(),
       pageChange.page,
       pageChange.pageSize
-    );
-    this.staffs.set(result.staffs);
-    this.totalItems.set(result.totalItems);
+    ).subscribe(result => {
+      this.staffs.set(result.staffs);
+      this.totalItems.set(result.totalItems);
+    });
   }
 
   deleteStaff(id: string): void {
     if (confirm(`Are you sure you want to delete staff ${id}?`)) {
-      this.staffService.deleteStaff(id);
-      this.loadStaffs();
+      this.staffService.deleteStaff(id).subscribe(() => {
+        this.loadStaffs();
+      });
     }
   }
 

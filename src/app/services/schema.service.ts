@@ -28,21 +28,22 @@ export class SchemaService {
     private transactionTableSchema: TableSchema = {
         columns: [
             { key: 'id', label: 'Transaction ID' },
-            { key: 'userId', label: 'User' },
-            { key: 'receiverId', label: 'Receiver' },
+            { key: 'merchantName', label: 'Merchant' },
             { key: 'amount', label: 'Amount' },
-            { key: 'createdAt', label: 'Date', isDate: true },
+            { key: 'type', label: 'Type' },
+            { key: 'status', label: 'Status' },
+            { key: 'date', label: 'Date', isDate: true }
         ],
-        searchableFields: ['id', 'userId', 'receiverId']
+        searchableFields: ['id', 'merchantName', 'status', 'type']
     };
 
     private transactionFormSchema: FormSchema = {
         fields: [
-            { key: 'userId', label: 'Sender', type: 'lookup', required: true, lookupResource: 'users', displayField: 'name' },
-            { key: 'receiverId', label: 'Receiver', type: 'lookup', required: true, lookupResource: 'users', displayField: 'name' },
-            { key: 'organizationId', label: 'Organization', type: 'lookup', required: true, lookupResource: 'organizations', displayField: 'name' },
             { key: 'amount', label: 'Amount', type: 'number', required: true },
-            { key: 'cashbackId', label: 'Cashback Scheme', type: 'lookup', lookupResource: 'cashback-schemes', displayField: 'name' },
+            { key: 'merchantName', label: 'Merchant Name', type: 'text', required: true },
+            { key: 'cardId', label: 'Card Number', type: 'text', required: true },
+            { key: 'type', label: 'Type', type: 'select', options: [{ label: 'Debit', value: 'debit' }, { label: 'Credit', value: 'credit' }], required: true },
+            { key: 'status', label: 'Status', type: 'select', options: [{ label: 'Pending', value: 'pending' }, { label: 'Completed', value: 'completed' }, { label: 'Failed', value: 'failed' }], required: true }
         ]
     };
 
@@ -97,18 +98,23 @@ export class SchemaService {
 
     private cashbackSchemeTableSchema: TableSchema = {
         columns: [
-            { key: 'name', label: 'Name' },
-            { key: 'description', label: 'Description' },
-            { key: 'isActive', label: 'Active', isBoolean: true },
+            { key: 'name', label: 'Scheme Name' },
+            { key: 'type', label: 'Type' },
+            { key: 'value', label: 'Value' },
+            { key: 'minTransactionAmount', label: 'Min Transaction Amount' },
+            { key: 'isActive', label: 'Active', isBoolean: true }
         ],
-        searchableFields: ['name', 'description']
+        searchableFields: ['name', 'type']
     };
 
     private cashbackSchemeFormSchema: FormSchema = {
         fields: [
-            { key: 'name', label: 'Name', type: 'text', required: true },
-            { key: 'description', label: 'Description', type: 'textarea', required: true },
-            { key: 'isActive', label: 'Active', type: 'boolean' },
+            { key: 'name', label: 'Scheme Name', type: 'text', required: true },
+            { key: 'type', label: 'Type', type: 'select', options: [{ label: 'Flat', value: 'flat' }, { label: 'Percentage', value: 'percentage' }], required: true },
+            { key: 'value', label: 'Value', type: 'number', required: true },
+            { key: 'minTransactionAmount', label: 'Min Transaction Amount', type: 'number', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'isActive', label: 'Active', type: 'boolean' }
         ]
     };
 
@@ -167,9 +173,10 @@ export class SchemaService {
             { key: 'organizationId', label: 'Organization', type: 'lookup', required: true, lookupResource: 'organizations', displayField: 'name' },
             {
                 key: 'role', label: 'Role', type: 'select', options: [
-                    { label: 'Admin', value: 'admin' },
-                    { label: 'Manager', value: 'manager' },
-                    { label: 'Staff', value: 'staff' }
+                    { label: 'Admin', value: 'Admin' },
+                    { label: 'Manager', value: 'Manager' },
+                    { label: 'Operator', value: 'Operator' },
+                    { label: 'Customer', value: 'Customer' }
                 ], required: true
             },
             { key: 'isActive', label: 'Active', type: 'boolean' }

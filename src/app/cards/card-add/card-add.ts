@@ -59,8 +59,9 @@ export class CardAddComponent {
         status: 'inactive', // Default status
         userId: undefined
       }));
-      this.cardService.addCards(cards);
-      this.router.navigate(['/cards']);
+      this.cardService.addCards(cards).subscribe(() => {
+        this.router.navigate(['/cards']);
+      });
     }
   }
 

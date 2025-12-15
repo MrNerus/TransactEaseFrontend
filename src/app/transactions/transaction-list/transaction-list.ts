@@ -47,15 +47,16 @@ export class TransactionList {
   }
 
   loadTransactions(): void {
-    const result = this.transactionService.getTransactions(
+    this.transactionService.getTransactions(
       this.searchTerm(),
       this.searchField(),
       1,
       this.pageSize(),
       this.filter()
-    );
-    this.transactions.set(result.transactions);
-    this.totalItems.set(result.totalItems);
+    ).subscribe(result => {
+      this.transactions.set(result.transactions);
+      this.totalItems.set(result.totalItems);
+    });
   }
 
   onSearchChange(searchChange: SearchChange): void {
@@ -65,15 +66,16 @@ export class TransactionList {
   }
 
   onPageChange(pageChange: PageChange): void {
-    const result = this.transactionService.getTransactions(
+    this.transactionService.getTransactions(
       this.searchTerm(),
       this.searchField(),
       pageChange.page,
       pageChange.pageSize,
       this.filter()
-    );
-    this.transactions.set(result.transactions);
-    this.totalItems.set(result.totalItems);
+    ).subscribe(result => {
+      this.transactions.set(result.transactions);
+      this.totalItems.set(result.totalItems);
+    });
   }
 
   onFilterChange(payload: FilterPayload): void {

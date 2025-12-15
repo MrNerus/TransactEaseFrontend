@@ -31,10 +31,11 @@ export class CashbackSchemeFormComponent {
     const url = this.router.url;
 
     if (id) {
-      const scheme = this.cashbackSchemeService.getCashbackSchemeById(id);
-      if (scheme) {
-        this.data.set(scheme);
-      }
+      this.cashbackSchemeService.getCashbackSchemeById(id).subscribe(scheme => {
+        if (scheme) {
+          this.data.set(scheme);
+        }
+      });
     }
 
     if (url.includes('view')) {
@@ -45,11 +46,14 @@ export class CashbackSchemeFormComponent {
   onSave(formData: any) {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.cashbackSchemeService.updateCashbackScheme({ ...formData, id });
+      this.cashbackSchemeService.updateCashbackScheme({ ...formData, id }).subscribe(() => {
+        this.router.navigate(['/cashback-schemes']);
+      });
     } else {
-      this.cashbackSchemeService.addCashbackScheme(formData);
+      this.cashbackSchemeService.addCashbackScheme(formData).subscribe(() => {
+        this.router.navigate(['/cashback-schemes']);
+      });
     }
-    this.router.navigate(['/cashback-schemes']);
   }
 
   onCancel() {

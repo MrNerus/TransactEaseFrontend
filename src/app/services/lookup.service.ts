@@ -15,8 +15,9 @@ export class LookupService {
     getData(resource: string, searchTerm: string = '', page: number = 1, pageSize: number = 10): Observable<{ data: any[], totalItems: number }> {
         switch (resource) {
             case 'users':
-                const usersResult = this.userService.getUsers(searchTerm, 'all', page, pageSize);
-                return of({ data: usersResult.users, totalItems: usersResult.totalItems });
+                return this.userService.getUsers(searchTerm, 'all', page, pageSize).pipe(
+                    map(result => ({ data: result.users, totalItems: result.totalItems }))
+                );
 
             case 'organizations':
                 return this.organizationService.getOrganizations(searchTerm, 'all', page, pageSize).pipe(
@@ -24,12 +25,14 @@ export class LookupService {
                 );
 
             case 'cashback-schemes':
-                const schemesResult = this.cashbackSchemeService.getCashbackSchemes(searchTerm, 'all', page, pageSize);
-                return of({ data: schemesResult.cashbackSchemes, totalItems: schemesResult.totalItems });
+                return this.cashbackSchemeService.getCashbackSchemes(searchTerm, 'all', page, pageSize).pipe(
+                    map(result => ({ data: result.cashbackSchemes, totalItems: result.totalItems }))
+                );
 
             case 'staffs':
-                const staffsResult = this.staffService.getStaffs(searchTerm, 'all', page, pageSize);
-                return of({ data: staffsResult.staffs, totalItems: staffsResult.totalItems });
+                return this.staffService.getStaffs(searchTerm, 'all', page, pageSize).pipe(
+                    map(result => ({ data: result.staffs, totalItems: result.totalItems }))
+                );
 
             default:
                 return of({ data: [], totalItems: 0 });

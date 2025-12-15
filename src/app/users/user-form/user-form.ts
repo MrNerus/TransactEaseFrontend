@@ -30,10 +30,11 @@ export class UserFormComponent {
     const url = this.router.url;
 
     if (id) {
-      const user = this.userService.getUserById(id);
-      if (user) {
-        this.data.set(user);
-      }
+      this.userService.getUserById(id).subscribe(user => {
+        if (user) {
+          this.data.set(user);
+        }
+      });
     }
 
     if (url.includes('view')) {
@@ -44,9 +45,13 @@ export class UserFormComponent {
   onSave(formData: any) {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.userService.updateUser({ ...formData, id });
+      this.userService.updateUser({ ...formData, id }).subscribe(() => {
+        this.router.navigate(['/users']);
+      });
     } else {
-      this.userService.addUser(formData);
+      this.userService.addUser(formData).subscribe(() => {
+        this.router.navigate(['/users']);
+      });
     }
     this.router.navigate(['/users']);
   }

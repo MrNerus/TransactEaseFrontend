@@ -29,17 +29,17 @@ export class CardTransferComponent {
     const cardId = this.route.snapshot.paramMap.get('id');
     if (cardId) {
       // Pre-fill card ID if coming from list action
-      this.data.set({ cardIds: cardId });
+      this.data.set({ cardId: cardId });
     }
   }
 
   onSave(formData: any): void {
-    const { cardIds, targetOrganizationId } = formData;
+    const { cardId, targetOrganizationId } = formData;
     // Handle comma separated string for cardIds if entered manually
-    const ids = Array.isArray(cardIds) ? cardIds : cardIds.split(',').map((id: string) => id.trim());
 
-    this.cardService.transferCards(ids, targetOrganizationId);
-    this.router.navigate(['/cards']);
+    this.cardService.transferCards(cardId, targetOrganizationId, `${this.data().cardId.toString()}`).subscribe(() => {
+      this.router.navigate(['/cards']);
+    });
   }
 
   onCancel(): void {

@@ -34,8 +34,9 @@ export class CardAssignComponent {
 
   onSave(formData: any): void {
     const { cardId, userId, issueDate, expiryDate } = formData;
-    this.cardService.assignCard(cardId, userId, issueDate, expiryDate);
-    this.router.navigate(['/cards']);
+    this.cardService.assignCard(cardId, userId, issueDate, expiryDate, `${this.data().cardId.toString()}`).subscribe(() => {
+      this.router.navigate(['/cards']);
+    });
   }
 
   onCancel(): void {

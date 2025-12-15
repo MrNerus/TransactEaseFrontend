@@ -49,9 +49,10 @@ export class CardListComponent {
   }
 
   loadCards(page: number = 1): void {
-    const { cards, totalItems } = this.cardService.getCards(page, this.pageSize());
-    this.cards.set(cards);
-    this.totalItems.set(totalItems);
+    this.cardService.getCards(page, this.pageSize()).subscribe(result => {
+      this.cards.set(result.cards);
+      this.totalItems.set(result.totalItems);
+    });
   }
 
   onPageChange(pageChange: PageChange): void {

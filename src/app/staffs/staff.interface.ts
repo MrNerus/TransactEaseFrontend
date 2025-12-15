@@ -2,8 +2,8 @@ export interface Staff {
   id: string;
   fullName: string;
   email: string;
-  organizationId: string;
-  role: 'Admin' | 'Manager' | 'Operator' | 'Customer';
+  organizationId: number;
+  role: string;
   isActive: boolean;
   createdAt: string;
 }

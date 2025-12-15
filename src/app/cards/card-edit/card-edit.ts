@@ -29,18 +29,19 @@ export class CardEditComponent {
 
         this.cardId = this.route.snapshot.paramMap.get('id');
         if (this.cardId) {
-            const card = this.cardService.getCardById(this.cardId);
-            if (card) {
-                // Flatten or format data if needed, but schema seems to match card interface directly
-                this.data.set(card);
-            }
+            this.cardService.getCardById(this.cardId).subscribe(card => {
+                if (card) {
+                    this.data.set(card);
+                }
+            });
         }
     }
 
     onSave(formData: any): void {
         if (this.cardId) {
-            this.cardService.updateCard({ ...formData, id: this.cardId });
-            this.router.navigate(['/cards']);
+            this.cardService.updateCard({ ...formData, id: this.cardId }).subscribe(() => {
+                this.router.navigate(['/cards']);
+            });
         }
     }
 

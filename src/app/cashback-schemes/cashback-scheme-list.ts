@@ -4,13 +4,7 @@ import { DataTableComponent, PageChange, SearchChange, TableAction, Controls } f
 import { CashbackSchemeService } from './cashback-scheme.service';
 import { PermissionService } from '../services/permission.service';
 import { SchemaService } from '../services/schema.service';
-
-interface CashbackScheme {
-  id: string;
-  name: string;
-  description: string;
-  isActive: boolean;
-}
+import { CashbackScheme } from './cashback-scheme.interface';
 
 @Component({
   selector: 'app-cashback-scheme-list',
@@ -49,14 +43,15 @@ export class CashbackSchemeListComponent {
   }
 
   loadCashbackSchemes(): void {
-    const result = this.cashbackSchemeService.getCashbackSchemes(
+    this.cashbackSchemeService.getCashbackSchemes(
       this.searchTerm(),
       this.searchField(),
       1,
       this.pageSize()
-    );
-    this.cashbackSchemes.set(result.cashbackSchemes);
-    this.totalItems.set(result.totalItems);
+    ).subscribe(result => {
+      this.cashbackSchemes.set(result.cashbackSchemes);
+      this.totalItems.set(result.totalItems);
+    });
   }
 
   onSearchChange(searchChange: SearchChange): void {
@@ -67,20 +62,22 @@ export class CashbackSchemeListComponent {
 
   onPageChange(pageChange: PageChange): void {
     this.pageSize.set(pageChange.pageSize);
-    const result = this.cashbackSchemeService.getCashbackSchemes(
+    this.cashbackSchemeService.getCashbackSchemes(
       this.searchTerm(),
       this.searchField(),
       pageChange.page,
       pageChange.pageSize
-    );
-    this.cashbackSchemes.set(result.cashbackSchemes);
-    this.totalItems.set(result.totalItems);
+    ).subscribe(result => {
+      this.cashbackSchemes.set(result.cashbackSchemes);
+      this.totalItems.set(result.totalItems);
+    });
   }
 
   deleteCashbackScheme(id: string): void {
     if (confirm(`Are you sure you want to delete scheme ${id}?`)) {
-      this.cashbackSchemeService.deleteCashbackScheme(id);
-      this.loadCashbackSchemes();
+      this.cashbackSchemeService.deleteCashbackScheme(id).subscribe(() => {
+        this.loadCashbackSchemes();
+      });
     }
   }
 
